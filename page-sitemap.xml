@@ -2,34 +2,34 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>http://mxclub.github.io/personal-blog</loc>
+        <loc>https://willwang.top</loc>
         <changefreq>daily</changefreq>
         <priority>1</priority>
     </url>
     
     <url>
-        <loc>http://mxclub.github.io/personal-blog/friends/</loc>
-        <lastmod>2019-03-08T16:27:59.364Z</lastmod>
+        <loc>https://willwang.top/friends/</loc>
+        <lastmod>2019-03-09T10:05:50.815Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>http://mxclub.github.io/personal-blog/about/</loc>
-        <lastmod>2019-03-08T16:09:46.896Z</lastmod>
+        <loc>https://willwang.top/about/</loc>
+        <lastmod>2019-03-09T07:37:27.294Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>http://mxclub.github.io/personal-blog/tags/</loc>
+        <loc>https://willwang.top/tags/</loc>
         <lastmod>2019-03-06T17:08:08.324Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>http://mxclub.github.io/personal-blog/categories/</loc>
+        <loc>https://willwang.top/categories/</loc>
         <lastmod>2019-03-06T17:03:16.111Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
