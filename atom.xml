@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Will&#39;blog</title>
+  <title>Will&#39;s blog</title>
   
   
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://willwang.top/"/>
-  <updated>2019-03-08T18:19:30.926Z</updated>
+  <updated>2019-03-09T07:25:09.355Z</updated>
   <id>https://willwang.top/</id>
   
   <author>
@@ -15,28 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>t1</title>
-    <link href="https://willwang.top/published/2019/03/09/t1/"/>
-    <id>https://willwang.top/published/2019/03/09/t1/</id>
-    <published>2019-03-08T16:00:00.000Z</published>
-    <updated>2019-03-08T18:19:30.926Z</updated>
-    
-    <content type="html"><![CDATA[<p>hello</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;hello&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>Welcome to my blog</title>
