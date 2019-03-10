@@ -8,6 +8,20 @@
     </url>
     
     <url>
+        <loc>https://willwang.top/categories/2019-03-10-</loc>
+        <lastmod>2019-03-10T04:46:01.450Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://willwang.top/tags/2019-03-10-</loc>
+        <lastmod>2019-03-10T04:45:45.682Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
         <loc>https://willwang.top/about/</loc>
         <lastmod>2019-03-10T00:32:43.158Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -17,20 +31,6 @@
     <url>
         <loc>https://willwang.top/friends/</loc>
         <lastmod>2019-03-09T10:05:50.815Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://willwang.top/tags/</loc>
-        <lastmod>2019-03-06T17:08:08.324Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://willwang.top/categories/</loc>
-        <lastmod>2019-03-06T17:03:16.111Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>

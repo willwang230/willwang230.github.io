@@ -4,12 +4,22 @@
 
     <sitemap>
         <loc>https://willwang.top/post-sitemap.xml</loc>
-        <lastmod>2019-03-09T07:25:09.355Z</lastmod>
+        <lastmod>2019-03-10T04:48:28.037Z</lastmod>
     </sitemap>
 
     <sitemap>
         <loc>https://willwang.top/page-sitemap.xml</loc>
-        <lastmod>2019-03-10T00:32:43.158Z</lastmod>
+        <lastmod>2019-03-10T04:46:01.450Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>https://willwang.top/category-sitemap.xml</loc>
+        <lastmod>2019-03-10T04:48:28.037Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>https://willwang.top/tag-sitemap.xml</loc>
+        <lastmod>2019-03-10T04:39:26.443Z</lastmod>
     </sitemap>
 
 </sitemapindex>
