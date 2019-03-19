@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://willwang.top/"/>
-  <updated>2019-03-10T08:11:21.881Z</updated>
+  <updated>2019-03-19T16:40:41.490Z</updated>
   <id>https://willwang.top/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>win7下安装Anaconda3和tensorflow</title>
+    <link href="https://willwang.top/published/2019/03/19/win7%E4%B8%8B%E5%AE%89%E8%A3%85Anaconda3%E5%92%8Ctensorflow/"/>
+    <id>https://willwang.top/published/2019/03/19/win7下安装Anaconda3和tensorflow/</id>
+    <published>2019-03-18T16:00:00.000Z</published>
+    <updated>2019-03-19T16:40:41.490Z</updated>
+    
+    <content type="html"><![CDATA[<p>win7搭建Anaconda3及tensorflow环境<br>其中：本地python为v3.6.5, Anaconda3为Anaconda3-5.2.0-Windows-x86_64</p><a id="more"></a><h2 id="1-安装python"><a href="#1-安装python" class="headerlink" title="1   安装python"></a>1   安装python</h2><p>python3和python2环境变量共存设置<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">%</span>Pytho<span class="symbol">n3</span><span class="meta">%</span>;<span class="meta">%</span>Pytho<span class="symbol">n3</span><span class="meta">%</span>\Scripts;<span class="meta">%</span>Pytho<span class="symbol">n2</span><span class="meta">%</span>;<span class="meta">%</span>Pytho<span class="symbol">n2</span><span class="meta">%</span>\Scripts;</span><br></pre></td></tr></table></figure></p><h2 id="2-安装及配置pip"><a href="#2-安装及配置pip" class="headerlink" title="2   安装及配置pip"></a>2   安装及配置pip</h2><p>安装及升级<br>python -m pip install –upgrade pip</p><p>国内pip源<br>清华：<a href="https://pypi.tuna.tsinghua.edu.cn/simple" target="_blank" rel="noopener">https://pypi.tuna.tsinghua.edu.cn/simple</a><br>阿里云：<a href="http://mirrors.aliyun.com/pypi/simple/" target="_blank" rel="noopener">http://mirrors.aliyun.com/pypi/simple/</a><br>中国科技大学 <a href="https://pypi.mirrors.ustc.edu.cn/simple/" target="_blank" rel="noopener">https://pypi.mirrors.ustc.edu.cn/simple/</a><br>华中理工大学：<a href="http://pypi.hustunique.com/" target="_blank" rel="noopener">http://pypi.hustunique.com/</a><br>山东理工大学：<a href="http://pypi.sdutlinux.org/" target="_blank" rel="noopener">http://pypi.sdutlinux.org/</a><br>豆瓣：<a href="http://pypi.douban.com/simple/" target="_blank" rel="noopener">http://pypi.douban.com/simple/</a></p><p>更改pip源<br>windows环境下，添加或修改为：<br><figure class="highlight vim"><figcaption><span>C:\Users\will\pip\pip.ini</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">global</span>]</span><br><span class="line"><span class="built_in">index</span>-url = http<span class="variable">s:</span>//pypi.tuna.tsinghua.edu.<span class="keyword">cn</span>/simple</span><br></pre></td></tr></table></figure></p><p>linux环境下,添加或修改为：<br><figure class="highlight vim"><figcaption><span>$HOME/pip/pip.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">global</span>]</span><br><span class="line"><span class="built_in">index</span>-url = http<span class="variable">s:</span>//pypi.tuna.tsinghua.edu.<span class="keyword">cn</span>/simple</span><br></pre></td></tr></table></figure></p><h2 id="3-安装及配置Anaconda3"><a href="#3-安装及配置Anaconda3" class="headerlink" title="3   安装及配置Anaconda3"></a>3   安装及配置Anaconda3</h2><h3 id="3-1-下载Anaconda3"><a href="#3-1-下载Anaconda3" class="headerlink" title="3.1 下载Anaconda3"></a>3.1 下载Anaconda3</h3><p><a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/" target="_blank" rel="noopener">Anaconda3-5.2.0</a>,进行安装</p><h3 id="3-2-配置Anaconda3环境变量"><a href="#3-2-配置Anaconda3环境变量" class="headerlink" title="3.2 配置Anaconda3环境变量"></a>3.2 配置Anaconda3环境变量</h3><p>新建系统变量：<code>ANACONDA3</code> 为 <code>C:/MyProgramFiles/Anaconda3</code><br>在Path添加<br><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%ANACONDA3%;%ANACONDA3%/Library/mingw-w64/bin;%ANACONDA3%/Library/bin;%ANACONDA3%/Scripts;</span><br></pre></td></tr></table></figure></p><p>参考后，目前没有配置：<code>%ANACONDA3%/Library/usr/bin</code>，原因：没找到路径,可能是win没有。</p><p>测试是否配置成功：命令行下输入:conda</p><h3 id="3-3-登录jupyter"><a href="#3-3-登录jupyter" class="headerlink" title="3.3 登录jupyter"></a>3.3 登录jupyter</h3><p>运行Jupyter Notebook。<br>看到<code>http://localhost:8888/?token=...</code>表示成功</p><h3 id="3-4-修改coanda包管理源"><a href="#3-4-修改coanda包管理源" class="headerlink" title="3.4 修改coanda包管理源"></a>3.4 修改coanda包管理源</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda config --<span class="built_in">add</span> channels http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/anaconda/pkgs/free/</span><br><span class="line">conda config --<span class="built_in">add</span> channels http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/anaconda/pkgs/main/</span><br><span class="line">conda config --<span class="keyword">set</span> show_channel_urls yes</span><br></pre></td></tr></table></figure><p>可能有用，coanda删除源<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">coanda <span class="built_in">config</span> --<span class="built_in">remove</span> channels https:<span class="comment">//error……</span></span><br></pre></td></tr></table></figure></p><h2 id="4-安装tensorflow"><a href="#4-安装tensorflow" class="headerlink" title="4    安装tensorflow"></a>4    安装tensorflow</h2><p>tensorflow版本分为：</p><ul><li>CPU版本：pip3 install –upgrade tensorflow</li><li>GPU版本：pip3 install –upgrade tensorflow-gpu（电脑不支持）</li></ul><p>安装cpu版本<br>pip install –upgrade tensorflow</p><p>tensorflow安装成功测试<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; import tensorflow as tf</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; hello = tf.constant(<span class="string">'Hello, TensorFlow!'</span>)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; sess = tf.Session()</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; <span class="built_in">print</span>(sess.run(hello))</span></span><br></pre></td></tr></table></figure></p><p>Ref</p><ol><li><a href="https://www.cnblogs.com/amanda-x/p/7739467.html" target="_blank" rel="noopener">Anaconda安装与环境配置</a></li><li><a href="https://blog.csdn.net/jay100500/article/details/72792636" target="_blank" rel="noopener">TensorFlow在Windows环境下的搭建</a></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;win7搭建Anaconda3及tensorflow环境&lt;br&gt;其中：本地python为v3.6.5, Anaconda3为Anaconda3-5.2.0-Windows-x86_64&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="AI" scheme="https://willwang.top/categories/AI/"/>
+    
+    
+      <category term="deep learning basics" scheme="https://willwang.top/tags/deep-learning-basics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Welcome to my blog</title>
+    <link href="https://willwang.top/published/2019/03/10/welcome/"/>
+    <id>https://willwang.top/published/2019/03/10/welcome/</id>
+    <published>2019-03-09T16:00:00.000Z</published>
+    <updated>2019-03-10T04:39:26.443Z</updated>
+    
+    <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;欢迎访问我的博客，希望留下你美丽的足记。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="欢迎" scheme="https://willwang.top/tags/%E6%AC%A2%E8%BF%8E/"/>
+    
+  </entry>
   
   <entry>
     <title>CentOS6.5下搭建mongodb主、从、仲裁节点副本集实践</title>
@@ -42,30 +88,6 @@
     
     
       <category term="mongodb" scheme="https://willwang.top/tags/mongodb/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Welcome to my blog</title>
-    <link href="https://willwang.top/published/2019/03/10/welcome/"/>
-    <id>https://willwang.top/published/2019/03/10/welcome/</id>
-    <published>2019-03-09T16:00:00.000Z</published>
-    <updated>2019-03-10T04:39:26.443Z</updated>
-    
-    <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;欢迎访问我的博客，希望留下你美丽的足记。&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
-      <category term="欢迎" scheme="https://willwang.top/tags/%E6%AC%A2%E8%BF%8E/"/>
     
   </entry>
   
