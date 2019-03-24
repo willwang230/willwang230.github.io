@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>CentOS6.5 配置Iptables | Will&#39;s blog</title>
+  
+  
+  <meta name="description" content="will go everywhere!">
+  
+
+  
+  <link rel="alternate" href="/atom.xml" title="Will's blog">
+  
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="msapplication-TileColor" content="#1BC3FB">
+  <meta name="msapplication-config" content="https://willwang.top/img/favicons/browserconfig.xml">
+  
+
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+  
+  
+  <link rel="shortcut icon" type="image/x-icon" href="https://willwang.top/img/favicons/favicon.ico">
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="https://willwang.top/img/favicons/favicon-32x32.ico">
+  <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="https://willwang.top/img/favicons/apple-touch-icon.png">
+  <link rel="mask-icon" color="#1BC3FB" href="https://willwang.top/img/favicons/safari-pinned-tab.svg">
+  <link rel="manifest" href="https://willwang.top/img/favicons/site.webmanifest">
+  
+
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="material"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header material">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          Will's blog
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="categories" class="nav flat-box" href="/categories/">
+									<i class="fas fa-folder-open fa-fw"></i>&nbsp;分类
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="tags" class="nav flat-box" href="/tags/">
+									<i class="fas fa-hashtag fa-fw"></i>&nbsp;标签
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;朋友
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="about" class="nav flat-box" href="/about/">
+									<i class="fas fa-user fa-fw"></i>&nbsp;关于
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="categories" class="nav flat-box" href="/categories/">
+											<i class="fas fa-folder-open fa-fw"></i>&nbsp;分类
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="tags" class="nav flat-box" href="/tags/">
+											<i class="fas fa-hashtag fa-fw"></i>&nbsp;标签
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;朋友
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="about" class="nav flat-box" href="/about/">
+											<i class="fas fa-user fa-fw"></i>&nbsp;关于
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
+<section class="meta">
+  
+  
+  <div class="meta" id="header-meta">
+    
+      
+          <h1 class="title">CentOS6.5 配置Iptables</h1>
+      
+    
+
+    <div class="new-meta-box">
+      
+        <div class="new-meta-item author">
+          <a href="https://willwang.top">
+            <i class="fas fa-user" aria-hidden="true"></i>
+            willwang
+          </a>
+        </div>
+      
+      
+        <div class="new-meta-item date">
+          <a class="notlink">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            2019-03-24
+          </a>
+        </div>
+      
+      
+        
+          
+          <div class="new-meta-item category">
+            <a href="/categories/Linux/linux配置/">
+              <i class="fas fa-folder-open" aria-hidden="true"></i>
+              Linux&nbsp;/&nbsp;linux配置
+            </a>
+          </div>
+        
+      
+      
+        
+          <div class="new-meta-item browse busuanzi">
+            <a class="notlink">
+              <i class="fas fa-eye" aria-hidden="true"></i>
+              <span id="busuanzi_value_page_pv">
+                <i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i>
+              </span>
+            </a>
+          </div>
+        
+      
+      
+    </div>
+    <hr>
+  </div>
+</section>
+
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <p>要求：内网服务器需要进行访问限制，配置防火墙可以方便、简单地实现功能。如开放某个服务或其他特定端口，允许一段ip地址访问，禁止另一段ip地址访问。</p>
+<a id="more"></a>
+<h2 id="1-确定开启的服务及端口"><a href="#1-确定开启的服务及端口" class="headerlink" title="1. 确定开启的服务及端口"></a>1. 确定开启的服务及端口</h2><p>HTTP (TCP on port 80), HTTPS (TCP on port 443), SSH (TCP on port 22 by default), NTP (UDP on port 123), DNS (TCP and UDP on port 53), ping (ICMP),telnet(23),ftp (21,20,1024),mysql (3306),mongo (27017)</p>
+<p>iptables配置文件路径： <code>/etc/sysconfig/iptables</code></p>
+<h2 id="2-配置规则"><a href="#2-配置规则" class="headerlink" title="2. 配置规则"></a>2. 配置规则</h2><figure class="highlight hsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 查看iptables配置信息</span></span><br><span class="line">iptables -L -n</span><br><span class="line"></span><br><span class="line"><span class="meta"># 清除配置规则    -F: 清除默认所有, -X:清除自定义, -Z:清空计数器值</span></span><br><span class="line">iptables -F<span class="comment">; iptables -X; iptables -Z</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 允许本地回环访问</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -i lo -j ACCEPT</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -d <span class="number">127.0</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">8</span> -j REJECT</span><br><span class="line"></span><br><span class="line"><span class="meta"># 阻止通用攻击</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp ! --syn -m state --state NEW -j DROP</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --tcp-flags ALL NONE -j DROP</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --tcp-flags ALL ALL -j DROP</span><br><span class="line"></span><br><span class="line"><span class="meta"># 允许已建立的入站连接</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="meta"># 允许http和https</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">80</span> -j ACCEPT</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">443</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许ssh</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">22</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许ntp</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p udp --dport <span class="number">123</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许dns</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p udp --dport <span class="number">53</span> -j ACCEPT</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">53</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许ping包</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p icmp --icmp-type echo-request -j ACCEPT</span><br><span class="line"><span class="meta"># 允许telnet</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">23</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许ftp <span class="number">21</span>:ftp <span class="number">20</span>:active mode   <span class="number">1024</span>:Passive mode</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">20</span> -j ACCEPT</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">21</span> -j ACCEPT</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">1024</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许mysql</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">3306</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许mongo</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp --dport <span class="number">27017</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 允许特定ip+port访问</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp -s <span class="number">192.168</span><span class="number">.1</span><span class="number">.78</span> --dport <span class="number">22</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 禁止特定ip+其他端口访问(注意：禁止其他端口需要在允许特定端口之后配置)</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -p tcp -s <span class="number">192.168</span><span class="number">.1</span><span class="number">.78</span> -j DROP</span><br><span class="line"><span class="meta"># 允许多个ip访问</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -i eth1 -m iprange --src-range <span class="number">192.168</span><span class="number">.1</span><span class="number">.81</span><span class="number">-192.168</span><span class="number">.1</span><span class="number">.90</span> -j ACCEPT</span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -i eth1 -s <span class="number">192.168</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">24</span> -j ACCEPT</span><br><span class="line"><span class="meta"># 阻止多个ip访问</span></span><br><span class="line">iptables -A <span class="keyword">INPUT</span> -m iprange --src-range <span class="number">192.168</span><span class="number">.1</span><span class="number">.71</span><span class="number">-192.168</span><span class="number">.1</span><span class="number">.80</span> -j DROP</span><br><span class="line"><span class="meta">#封停一个IP，-I是插入到最前面</span></span><br><span class="line">iptables -I <span class="keyword">INPUT</span> -s <span class="number">192.168</span><span class="number">.1</span><span class="number">.78</span> -j DROP</span><br><span class="line"><span class="meta">#要解封一个IP</span></span><br><span class="line">iptables -D <span class="keyword">INPUT</span> -s <span class="number">192.168</span><span class="number">.1</span><span class="number">.78</span> -j DROP</span><br><span class="line"></span><br><span class="line"><span class="meta"># 设置默认规则</span></span><br><span class="line"><span class="meta"># 丢掉其他入站包，允许所有出栈包，丢掉所有转发包</span></span><br><span class="line">iptables -P <span class="keyword">INPUT</span> DROP</span><br><span class="line">iptables -P OUTPUT ACCEPT</span><br><span class="line">iptables -P FORWARD DROP</span><br></pre></td></tr></table></figure>
+<h2 id="3-保存"><a href="#3-保存" class="headerlink" title="3. 保存"></a>3. 保存</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存配置</span></span><br><span class="line">service iptables save</span><br><span class="line"><span class="comment"># 重启服务</span></span><br><span class="line">service iptables restart</span><br></pre></td></tr></table></figure>
+<h2 id="4-其他相关命令"><a href="#4-其他相关命令" class="headerlink" title="4. 其他相关命令"></a>4. 其他相关命令</h2><h3 id="4-1-修改规则"><a href="#4-1-修改规则" class="headerlink" title="4.1 修改规则"></a>4.1 修改规则</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看需要删除的规则及序号</span></span><br><span class="line">iptables -L -n --line-number</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除指定端口规则对应的序列号</span></span><br><span class="line">iptables -D INPUT 5</span><br><span class="line"><span class="meta">#</span><span class="bash"> 确认是否删除</span></span><br><span class="line">iptables -L -n --line-number</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重新配置</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-2-iptables相关命令"><a href="#4-2-iptables相关命令" class="headerlink" title="4.2 iptables相关命令"></a>4.2 iptables相关命令</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开机自启/关闭</span></span><br><span class="line">chkconfig iptables on|off</span><br><span class="line"><span class="comment"># 启动/关闭/重启 服务</span></span><br><span class="line">service iptables start|stop|restart</span><br><span class="line"><span class="comment"># 查看状态</span></span><br><span class="line">service iptables status</span><br></pre></td></tr></table></figure>
+<h2 id="5-iptables帮助命令"><a href="#5-iptables帮助命令" class="headerlink" title="5. iptables帮助命令"></a>5. iptables帮助命令</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">iptables(选项)(参数)</span><br><span class="line"></span><br><span class="line">-<span class="ruby">t&lt;表&gt;：指定要操纵的表；</span></span><br><span class="line"><span class="ruby">-A：向规则链中添加或追加条目；</span></span><br><span class="line"><span class="ruby">-D：从规则链中删除条目；</span></span><br><span class="line"><span class="ruby">-i：向规则链中插入条目；</span></span><br><span class="line"><span class="ruby">-R：替换规则链中的条目；</span></span><br><span class="line"><span class="ruby">-L：显示规则链中已有的条目；</span></span><br><span class="line"><span class="ruby">-F：清楚规则链中已有的条目；</span></span><br><span class="line"><span class="ruby">-Z：清空规则链中的数据包计算器和字节计数器；</span></span><br><span class="line"><span class="ruby">-N：创建新的用户自定义规则链；</span></span><br><span class="line"><span class="ruby">-P：定义规则链中的默认目标；</span></span><br><span class="line"><span class="ruby">-h：显示帮助信息；</span></span><br><span class="line"><span class="ruby">-p：指定要匹配的数据包协议类型；</span></span><br><span class="line"><span class="ruby">-s：指定要匹配的数据包源ip地址；</span></span><br><span class="line"><span class="ruby">-j&lt;目标&gt;：指定要跳转的目标；</span></span><br><span class="line"><span class="ruby">-i&lt;网络接口&gt;：指定数据包进入本机的网络接口；</span></span><br><span class="line"><span class="ruby">-o&lt;网络接口&gt;：指定数据包要离开本机所使用的网络接口。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">iptables命令选项输入顺序：</span></span><br><span class="line"><span class="ruby">iptables -t 表名 &lt;-A/I/D/R&gt; 规则链名 [规则号] &lt;-i/o 网卡名&gt; -p 协议名 &lt;-s 源IP/源子网&gt; --sport 源端口 &lt;-d 目标IP/目标子网&gt; --dport 目标端口 -j 动作</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">表名包括：</span></span><br><span class="line"><span class="ruby">raw：高级功能，如：网址过滤。</span></span><br><span class="line"><span class="ruby">mangle：数据包修改（QOS），用于实现服务质量。</span></span><br><span class="line"><span class="ruby">net：地址转换，用于网关路由器。</span></span><br><span class="line"><span class="ruby">filter：包过滤，用于防火墙规则，默认为filter。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">规则链名包括：</span></span><br><span class="line"><span class="ruby">INPUT链：处理输入数据包。</span></span><br><span class="line"><span class="ruby">OUTPUT链：处理输出数据包。</span></span><br><span class="line"><span class="ruby">PORWARD链：处理转发数据包。</span></span><br><span class="line"><span class="ruby">PREROUTING链：用于目标地址转换（DNAT）。</span></span><br><span class="line"><span class="ruby">POSTOUTING链：用于源地址转换（SNAT）。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">动作包括：</span></span><br><span class="line"><span class="ruby">accept：接收数据包。</span></span><br><span class="line"><span class="ruby">DROP：丢弃数据包。</span></span><br><span class="line"><span class="ruby">REDIRECT：重定向、映射、透明代理。</span></span><br><span class="line"><span class="ruby">SNAT：源地址转换。</span></span><br><span class="line"><span class="ruby">DNAT：目标地址转换。</span></span><br><span class="line"><span class="ruby">MASQUERADE：IP伪装（NAT），用于ADSL。</span></span><br><span class="line"><span class="ruby">LOG：日志记录。</span></span><br></pre></td></tr></table></figure>
+<h2 id="6-Ref"><a href="#6-Ref" class="headerlink" title="6. Ref"></a>6. Ref</h2><ol>
+<li><a href="http://man.linuxde.net/iptables" target="_blank" rel="noopener">iptables命令</a></li>
+<li><a href="https://www.vultr.com/docs/setup-iptables-firewall-on-centos-6" target="_blank" rel="noopener">Setup IPTables Firewall on CentOS 6</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7" target="_blank" rel="noopener">How To Set Up a Firewall Using FirewallD on CentOS 7</a></li>
+<li><a href="https://www.vultr.com/docs/changing-your-ssh-port-for-extra-security-on-centos-6-or-7" target="_blank" rel="noopener">Changing Your SSH Port For Extra Security on CentOS 6 or 7</a></li>
+</ol>
+
+      </div>
+        
+          <section class="meta" id="footer-meta">
+            <hr>
+            <div class="new-meta-box">
+              
+                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-03-24T17:11:36+08:00">
+                  <a class="notlink">
+                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                    2019-03-24
+                  </a>
+                </div>
+              
+              
+                
+                <div class="new-meta-item meta-tags"><a class="tag" href="/tags/iptables/"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;iptables</a></div>
+              
+              
+            </div>
+          </section>
+        
+
+        
+            <div class="prev-next">
+                
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/published/2019/03/20/Deep-Learning-basics-p1-Introduction-to-Deep-Learning/" rel="prev" title="Deep Learning basics p1: Introduction to Deep Learning">
+                                    
+                                        Deep Learning basics p1: Introduction to Deep Learning
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                            
+                        </span>
+                    </section>
+                
+            </div>
+        
+
+    </section>
+
+</article>
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
+    <section class="article typo">
+      <h4><i class="fas fa-comments fa-fw" aria-hidden="true"></i>&nbsp;评论</h4>
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-spinner fa-spin fa-fw"></i>
+          </div>
+        </section>
+      
+    </section>
+  </article>
+
+
+
+<script>
+    window.subData = {
+        title: 'CentOS6.5 配置Iptables',
+        tools: true
+    }
+</script>
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="author">
+  <div class="content material">
+    
+      <div class="avatar">
+        <img class="avatar" src="/img/favicons/head.png">
+      </div>
+    
+    
+    
+      <div class="social-wrapper">
+        
+          
+            <a href="/atom.xml" class="social flat-btn" target="_blank" rel="external"><i class="social fas fa-rss" aria-hidden="true"></i></a>
+          
+        
+          
+            <a href="mailto:employ230@gmail.com" class="social flat-btn" target="_blank" rel="external"><i class="social fas fa-envelope" aria-hidden="true"></i></a>
+          
+        
+          
+            <a href="https://github.com/willwang230" class="social flat-btn" target="_blank" rel="external"><i class="social fab fa-github" aria-hidden="true"></i></a>
+          
+        
+      </div>
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="material">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;声明</div>
+  
+</header>
+
+  <div class="content material">
+    <p>本博客是为了记录自己的一些成长及经历，由于本人能力有限，如果有不足之处，还希望能指出来，我会尽力去完善的。</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="toc-wrapper">
+    
+<header class="material">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content material">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-确定开启的服务及端口"><span class="toc-text">1. 确定开启的服务及端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-配置规则"><span class="toc-text">2. 配置规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-保存"><span class="toc-text">3. 保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-其他相关命令"><span class="toc-text">4. 其他相关命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-修改规则"><span class="toc-text">4.1 修改规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-iptables相关命令"><span class="toc-text">4.2 iptables相关命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-iptables帮助命令"><span class="toc-text">5. iptables帮助命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Ref"><span class="toc-text">6. Ref</span></a></li></ol>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="material">
+  <div><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content material">
+      <a href="/tags/DL-basic/" style="font-size: 14px; color: #999">DL basic</a> <a href="/tags/iptables/" style="font-size: 14px; color: #999">iptables</a> <a href="/tags/mongodb/" style="font-size: 14px; color: #999">mongodb</a> <a href="/tags/欢迎/" style="font-size: 14px; color: #999">欢迎</a> <a href="/tags/环境搭建/" style="font-size: 14px; color: #999">环境搭建</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  
+    <div class="social-wrapper">
+      
+        
+          <a href="/atom.xml" class="social fas fa-rss flat-btn" target="_blank" rel="external"></a>
+        
+      
+        
+          <a href="mailto:employ230@gmail.com" class="social fas fa-envelope flat-btn" target="_blank" rel="external"></a>
+        
+      
+        
+          <a href="https://github.com/willwang230" class="social fab fa-github flat-btn" target="_blank" rel="external"></a>
+        
+      
+    </div>
+  
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  
+    <!--百度统计的代码-->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d8df1dd7fcc8d8d9460052ee5d8ad1de";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+  
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script async src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+  
+  
+  
+  
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    
+      
+        <script src="https://cdn.jsdelivr.net/gh/xaoxuu/volantis@1/js/volantis.min.js"></script>
+      
+    
+    <script>
+    var GUEST_INFO = ['nick','mail','link'];
+    var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+      return GUEST_INFO.indexOf(item) > -1
+    });
+    var notify = 'false' == true;
+    var verify = 'false' == true;
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      notify: notify,
+      verify: verify,
+      guest_info: guest_info,
+      
+      appId: "febVkNwX8LlCe2nlwgSycm0c-gzGzoHsz",
+      appKey: "TXHtP6xGy7APoB9C30mT84ld",
+      placeholder: "快来评论吧~",
+      pageSize:'10',
+      avatar:'mp',
+      lang:'zh-cn',
+      highlight:''
+    })
+    </script>
+  
+
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

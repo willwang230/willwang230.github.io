@@ -223,9 +223,9 @@
         
           
           <div class="new-meta-item category">
-            <a href="/categories/AI/">
+            <a href="/categories/AI/DL-basic/">
               <i class="fas fa-folder-open" aria-hidden="true"></i>
-              AI
+              AI&nbsp;/&nbsp;DL basic
             </a>
           </div>
         
@@ -250,7 +250,7 @@
 
     <section class="article typo">
       <div class="article-entry" itemprop="articleBody">
-        <p>通过python、Tensorflow和Keras框架实现的深度学习实例。本文是第一篇。<br>原文：<a href="https://pythonprogramming.net/loading-custom-data-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Introduction to Deep Learning - Deep Learning basics with Python, TensorFlow and Keras p.1</a></p>
+        <p>通过python、Tensorflow和Keras框架实现的深度学习实例。本文是深度学习的快速入门的第一章，简单介绍神经网络的实现原理，利用tensorflow，采用Keras模型对mnist数据集进行构建，训练和预测流程的简单实现。</p>
 <a id="more"></a>
 <p>简单总结下，不一定正确，只为加深印象。一般包括以下几个步骤：</p>
 <ol>
@@ -265,22 +265,24 @@
 </ol>
 <p>示例代码如下。</p>
 <figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 导包</span></span><br><span class="line"><span class="built_in">import</span> tensorflow as tf <span class="comment">#deep learning library. Tensors are just multi-dimensional arrays</span></span><br><span class="line"><span class="built_in">import</span> matplotlib.pyplot as plt</span><br><span class="line"><span class="built_in">import</span> numpy as np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 实例化数据集</span></span><br><span class="line"><span class="attr">mnist</span> = tf.keras.datasets.mnist <span class="comment"># mnist is a dataset of 28x28 images of handwritten digits and their labels</span></span><br><span class="line"></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data() <span class="comment"># unpacks images to x_train/x_test and labels to y_train/y_test</span></span><br><span class="line"><span class="comment"># print(x_train[0])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 归一化处理，使取值范围在[0, 1]或[-1, 1]</span></span><br><span class="line"><span class="attr">x_train</span> = tf.keras.utils.normalize(x_train, <span class="attr">axis=1)</span> <span class="comment"># scales data between 0 and 1</span></span><br><span class="line"><span class="attr">x_test</span> = tf.keras.utils.normalize(x_test, <span class="attr">axis=1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(x_train[0])</span></span><br><span class="line"><span class="comment"># imshow是设置图片的展示，cmap意思是color map，颜色方案，binary代表是白底黑字；</span></span><br><span class="line"><span class="comment"># plt.imshow(x_train[0], cmap = plt.cm.binary)</span></span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3 建立模型</span></span><br><span class="line"><span class="attr">model</span> = tf.keras.models.Sequential()    <span class="comment"># a basic feed-forward model</span></span><br><span class="line">model.add(tf.keras.layers.Flatten()) <span class="comment"># flatten date ,takes our 28x28 and makes it 1x784  #</span></span><br><span class="line"><span class="comment"># Adds a densely-connected layer with 128 units to the model:</span></span><br><span class="line">model.add(tf.keras.layers.Dense(<span class="number">128</span>, <span class="attr">activation=tf.nn.relu))</span></span><br><span class="line">model.add(tf.keras.layers.Dense(<span class="number">128</span>, <span class="attr">activation=tf.nn.relu))</span></span><br><span class="line"><span class="comment"># Add a softmax layer with 10 output units:</span></span><br><span class="line">model.add(tf.keras.layers.Dense(<span class="number">10</span>, <span class="attr">activation=tf.nn.softmax))</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4 配置学习模型</span></span><br><span class="line">model.compile(<span class="attr">optimizer='adam',</span> <span class="comment"># Good default optimizer to start with  #优化器</span></span><br><span class="line">            <span class="attr">loss='sparse_categorical_crossentropy',#</span> how will we calculate our <span class="string">"error."</span> Neural network aims to minimize loss.   <span class="comment">#优化期间最小化的函数</span></span><br><span class="line">            <span class="comment"># sparse: 稀疏的   categorical:绝对的，无条件的，分类的 crossentropy:交叉熵</span></span><br><span class="line">            <span class="attr">metrics=['accuracy'])</span> <span class="comment"># what to track #用于监控训练</span></span><br><span class="line"><span class="comment"># 5 训练模型 循环轮次：3</span></span><br><span class="line">model.fit(x_train, y_train, <span class="attr">epochs=3)</span>   <span class="comment"># train the model</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6 测试样本</span></span><br><span class="line">val_loss, <span class="attr">val_acc</span> = model.evaluate(x_test, y_test)  <span class="comment"># evaluate the out of sample data with model</span></span><br><span class="line">print(val_loss)  <span class="comment"># model's loss (error)</span></span><br><span class="line">print(val_acc)  <span class="comment"># model's accuracy</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 7 保存</span></span><br><span class="line">model.save('epic_num_reader.model')</span><br><span class="line"><span class="comment"># 重新实例化模型，会创建一个完全一样的模型</span></span><br><span class="line"><span class="attr">new_model</span> = tf.keras.models.load_model('epic_num_reader.model')</span><br><span class="line"></span><br><span class="line"><span class="comment"># 8 预测</span></span><br><span class="line"><span class="attr">predictions</span> = new_model.predict(x_test)</span><br><span class="line">print(predictions)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示数字</span></span><br><span class="line">print(np.argmax(predictions[<span class="number">0</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示数字图像</span></span><br><span class="line">plt.imshow(x_test[<span class="number">0</span>], <span class="attr">cmap</span> = plt.cm.binary)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>原文：<a href="https://pythonprogramming.net/introduction-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Introduction to Deep Learning - Deep Learning basics with Python, TensorFlow and Keras p.1</a></p>
+
       </div>
         
           <section class="meta" id="footer-meta">
             <hr>
             <div class="new-meta-box">
               
-                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-03-21T00:15:46+08:00">
+                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-03-24T17:16:08+08:00">
                   <a class="notlink">
                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                    2019-03-21
+                    2019-03-24
                   </a>
                 </div>
               
               
                 
-                <div class="new-meta-item meta-tags"><a class="tag" href="/tags/deep-learning-basics/"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;deep learning basics</a></div>
+                <div class="new-meta-item meta-tags"><a class="tag" href="/tags/DL-basic/"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;DL basic</a></div>
               
               
             </div>
@@ -289,6 +291,22 @@
 
         
             <div class="prev-next">
+                
+                    <section class="prev">
+                        <span class="art-item-left">
+                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
+                            <h4>
+                                <a href="/published/2019/03/24/CentOS6-5-配置Iptables/" rel="prev" title="CentOS6.5 配置Iptables">
+                                  
+                                      CentOS6.5 配置Iptables
+                                  
+                                </a>
+                            </h4>
+                            
+                                
+                            
+                        </span>
+                    </section>
                 
                 
                     <section class="next">
@@ -426,7 +444,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/deep-learning-basics/" style="font-size: 24px; color: #555">deep learning basics</a> <a href="/tags/mongodb/" style="font-size: 14px; color: #999">mongodb</a> <a href="/tags/欢迎/" style="font-size: 14px; color: #999">欢迎</a>
+      <a href="/tags/DL-basic/" style="font-size: 14px; color: #999">DL basic</a> <a href="/tags/iptables/" style="font-size: 14px; color: #999">iptables</a> <a href="/tags/mongodb/" style="font-size: 14px; color: #999">mongodb</a> <a href="/tags/欢迎/" style="font-size: 14px; color: #999">欢迎</a> <a href="/tags/环境搭建/" style="font-size: 14px; color: #999">环境搭建</a>
     </div>
   </section>
 
