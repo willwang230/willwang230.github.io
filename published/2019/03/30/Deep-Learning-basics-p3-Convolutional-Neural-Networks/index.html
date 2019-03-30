@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>Deep Learning basics p2:loading custom data | Will&#39;s blog</title>
+  <title>Deep Learning basics p3: Convolutional Neural Networks | Will&#39;s blog</title>
   
   
   <meta name="description" content="will go everywhere!">
@@ -198,7 +198,7 @@
   <div class="meta" id="header-meta">
     
       
-          <h1 class="title">Deep Learning basics p2:loading custom data</h1>
+          <h1 class="title">Deep Learning basics p3: Convolutional Neural Networks</h1>
       
     
 
@@ -215,7 +215,7 @@
         <div class="new-meta-item date">
           <a class="notlink">
             <i class="fas fa-clock" aria-hidden="true"></i>
-            2019-03-24
+            2019-03-30
           </a>
         </div>
       
@@ -252,44 +252,28 @@
       <div class="article-entry" itemprop="articleBody">
         <p>本文主要包括：</p>
 <ul>
-<li>获取微软的猫和狗的数据集，显示数据集信息</li>
-<li>通过数据集构建训练数据</li>
-<li>对训练数据进行处理，构建自定义模型<br><strong>注意：本文代码可以在Jupyter Notebook上顺序执行。</strong></li>
+<li>加载自定义数据</li>
+<li>构建顺序模型，并对模型进行堆叠</li>
+<li>配置学习过程</li>
+<li>训练数据</li>
 </ul>
 <a id="more"></a>
 <blockquote>
-<p>0 导入依赖包</p>
-</blockquote>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="title">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line"><span class="meta"># 设置变量</span></span><br><span class="line"><span class="type">DATADIR</span> = <span class="string">"G:\Resources\datasets\dataCatDog\PetImages"</span></span><br><span class="line"><span class="type">CATEGORIES</span> = [<span class="string">"Dog"</span>, <span class="string">"Cat"</span>]</span><br></pre></td></tr></table></figure>
+<h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.models</span> import Sequential</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Conv2D, MaxPooling2D</span><br><span class="line"></span><br><span class="line">import pickle</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>1 读取原始图片</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> category <span class="keyword">in</span> CATEGORIES: <span class="comment">#分类</span></span><br><span class="line">    path = os.path.join(DATADIR, category)  <span class="comment">#创建狗和猫的路径</span></span><br><span class="line">    <span class="keyword">for</span> img <span class="keyword">in</span> os.listdir(path):    <span class="comment">#迭代所有图片</span></span><br><span class="line">        img_array = cv2.imread(os.path.join(path, img), cv2.IMREAD_GRAYSCALE)   <span class="comment">#读取并转化为数组</span></span><br><span class="line">        plt.imshow(img_array, cmap=<span class="string">'gray'</span>)  <span class="comment">#设置配色方案</span></span><br><span class="line">        plt.show()  <span class="comment">#显示</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">break</span>   <span class="comment">#仅仅显示一个</span></span><br><span class="line">    <span class="built_in">break</span>   <span class="comment">#仅仅显示第一类</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印</span></span><br><span class="line"><span class="built_in">print</span>(img_array)</span><br><span class="line"><span class="comment"># 显示大小</span></span><br><span class="line"><span class="built_in">print</span>(img_array.shape)</span><br></pre></td></tr></table></figure>
+<h5 id="1-加载数据。"><a href="#1-加载数据。" class="headerlink" title="1 加载数据。"></a>1 加载数据。</h5></blockquote>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># X为输入数据</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># Y为标签</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"Y.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">Y</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"><span class="comment"># print(Y)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>2 重新设置大小</p>
-</blockquote>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IMG_SIZE = <span class="number">50</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span><span class="type">_array</span> = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))</span><br><span class="line">plt.imshow(<span class="keyword">new</span><span class="type">_array</span>, cmap=<span class="string">'gray'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h5 id="2-构建模型。"><a href="#2-构建模型。" class="headerlink" title="2 构建模型。"></a>2 构建模型。</h5></blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 堆叠模型。</span></span><br><span class="line"><span class="meta"># 2D卷积层 256表示输出空间的维度 ；(3, 3)表示2D卷积窗口的宽度和高度，单个数时，表示维度值相同；</span></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape = X.shape[<span class="number">1</span>:]))</span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"><span class="meta"># MaxPooling2D,对空间数据的最大池化</span></span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line"><span class="meta"># 设置激活函数</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 调整为1D的特征向量</span></span><br><span class="line">model.<span class="keyword">add</span>(Flatten())</span><br><span class="line"><span class="meta"># 全连接层，设置输出空间维度，即输出数据的尺寸为（*， 64）</span></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">64</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line"><span class="meta"># 设置激活函数sigmoid</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>3 构建训练数据集</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">training_data = []</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_training_data</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> category <span class="keyword">in</span> CATEGORIES:</span><br><span class="line">        path = os.path.join(DATADIR, category)</span><br><span class="line">        <span class="comment"># 获取分类类别索引    0:dog, 1:cat</span></span><br><span class="line">        class_num = CATEGORIES.index(category)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> img <span class="keyword">in</span> tqdm(os.listdir(path)):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="comment"># 读取图片，并保存为array</span></span><br><span class="line">                img_array = cv2.imread(os.path.join(path, img), cv2.IMREAD_GRAYSCALE)</span><br><span class="line">                <span class="comment"># 重置大小并保存</span></span><br><span class="line">                new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))</span><br><span class="line">                <span class="comment"># 将新分类添加到训练数据</span></span><br><span class="line">                training_data.append([new_array, class_num])</span><br><span class="line">            <span class="comment"># 捕获异常，防止出现异常</span></span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用训练数据</span></span><br><span class="line">create_training_data()</span><br><span class="line">print(len(training_data))</span><br></pre></td></tr></table></figure>
+<h5 id="3-配置学习过程。"><a href="#3-配置学习过程。" class="headerlink" title="3 配置学习过程。"></a>3 配置学习过程。</h5></blockquote>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta"># 主要 配置优化器optimizer，损失函数loss及评估标准metrics</span></span><br><span class="line">model.compile(loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">             optimizer=<span class="string">'adam'</span>,</span><br><span class="line">             metrics = [<span class="string">'accuracy'</span>])</span><br><span class="line">             </span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>4 对训练集进行随机排序</p>
-</blockquote>
-<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">random.shuffle(training_data)</span><br><span class="line"></span><br><span class="line"><span class="meta"># 通过遍历，确认随机排序结果</span></span><br><span class="line"><span class="keyword">for</span> <span class="keyword">sample</span> <span class="keyword">in</span> training_data[:<span class="number">10</span>]:</span><br><span class="line">    print(<span class="keyword">sample</span>[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>5 构建模型</p>
-</blockquote>
-<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">X = []</span><br><span class="line">Y = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> <span class="built_in">features</span>, <span class="built_in">label</span> <span class="keyword">in</span> training_data:</span><br><span class="line">    X.<span class="built_in">append</span>(<span class="built_in">features</span>)</span><br><span class="line">    Y.<span class="built_in">append</span>(<span class="built_in">label</span>)</span><br><span class="line"></span><br><span class="line"># 重构张量为目标尺寸元组，其中存储的内容不会改变</span><br><span class="line"><span class="built_in">print</span>(X[<span class="number">0</span>].reshape(-<span class="number">1</span>, IMG_SIZE, IMG_SIZE, <span class="number">1</span>))</span><br><span class="line">X = <span class="built_in">np</span>.<span class="built_in">array</span>(X).reshape(-<span class="number">1</span>, IMG_SIZE, IMG_SIZE, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>6 保存模型数据</p>
-</blockquote>
-<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 保存X</span></span><br><span class="line">pickle_out = <span class="keyword">open</span>(<span class="string">"X.pickle"</span>,<span class="string">"wb"</span>)</span><br><span class="line">pickle.dump(X, pickle_out)</span><br><span class="line">pickle_out.<span class="built_in">close</span>()</span><br><span class="line"><span class="meta"># 保存Y</span></span><br><span class="line">pickle_out = <span class="keyword">open</span>(<span class="string">"Y.pickle"</span>,<span class="string">"wb"</span>)</span><br><span class="line">pickle.dump(Y, pickle_out)</span><br><span class="line">pickle_out.<span class="built_in">close</span>()</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>7 读取X</p>
-</blockquote>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pickle_in = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line">X = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># 显示</span></span><br><span class="line">X[1]</span><br></pre></td></tr></table></figure>
-<p><em>原文：<a href="https://pythonprogramming.net/loading-custom-data-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Loading in your own data</a></em></p>
+<h5 id="4-训练模型。"><a href="#4-训练模型。" class="headerlink" title="4 训练模型。"></a>4 训练模型。</h5></blockquote>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 对样本X, Y进行迭代，批处理样本数<span class="number">32</span>；迭代次数<span class="number">3</span>；作为验证集比例为<span class="number">0.3</span></span><br><span class="line">model.fit(X, Y, batch_size = <span class="number">32</span>, epochs = <span class="number">1</span>, validation_split = <span class="number">0.3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><em>原文：<a href="https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Convolutional Neural Networks</a></em></p>
 
       </div>
         
@@ -297,10 +281,10 @@
             <hr>
             <div class="new-meta-box">
               
-                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-03-24T18:21:29+08:00">
+                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-03-30T16:54:30+08:00">
                   <a class="notlink">
                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                    2019-03-24
+                    2019-03-30
                   </a>
                 </div>
               
@@ -316,30 +300,14 @@
         
             <div class="prev-next">
                 
-                    <section class="prev">
-                        <span class="art-item-left">
-                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
-                            <h4>
-                                <a href="/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/" rel="prev" title="Deep Learning basics p3: Convolutional Neural Networks">
-                                  
-                                      Deep Learning basics p3: Convolutional Neural Networks
-                                  
-                                </a>
-                            </h4>
-                            
-                                
-                            
-                        </span>
-                    </section>
-                
                 
                     <section class="next">
                         <span class="art-item-right" aria-hidden="true">
                             <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
                             <h4>
-                                <a href="/published/2019/03/24/CentOS6-5-配置Iptables/" rel="prev" title="CentOS6.5 配置Iptables">
+                                <a href="/published/2019/03/24/Deep-Learning-basics-p2-loading-custom-data/" rel="prev" title="Deep Learning basics p2:loading custom data">
                                     
-                                        CentOS6.5 配置Iptables
+                                        Deep Learning basics p2:loading custom data
                                     
                                 </a>
                             </h4>
@@ -384,7 +352,7 @@
 
 <script>
     window.subData = {
-        title: 'Deep Learning basics p2:loading custom data',
+        title: 'Deep Learning basics p3: Convolutional Neural Networks',
         tools: true
     }
 </script>
@@ -452,6 +420,20 @@
       
       
         
+  <section class="toc-wrapper">
+    
+<header class="material">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content material">
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#0-导入依赖包"><span class="toc-text">0 导入依赖包</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-加载数据。"><span class="toc-text">1 加载数据。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-构建模型。"><span class="toc-text">2 构建模型。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-配置学习过程。"><span class="toc-text">3 配置学习过程。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-训练模型。"><span class="toc-text">4 训练模型。</span></a></li></ol>
+    </div>
+  </section>
+
 
       
     

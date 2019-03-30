@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Deep Learning basics p3: Convolutional Neural Networks</title>
+      <link href="/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/"/>
+      <url>/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/</url>
+      
+        <content type="html"><![CDATA[<p>本文主要包括：</p><ul><li>加载自定义数据</li><li>构建顺序模型，并对模型进行堆叠</li><li>配置学习过程</li><li>训练数据</li></ul><a id="more"></a><blockquote><h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.models</span> import Sequential</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Conv2D, MaxPooling2D</span><br><span class="line"></span><br><span class="line">import pickle</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="1-加载数据。"><a href="#1-加载数据。" class="headerlink" title="1 加载数据。"></a>1 加载数据。</h5></blockquote><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># X为输入数据</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># Y为标签</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"Y.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">Y</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"><span class="comment"># print(Y)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="2-构建模型。"><a href="#2-构建模型。" class="headerlink" title="2 构建模型。"></a>2 构建模型。</h5></blockquote><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 堆叠模型。</span></span><br><span class="line"><span class="meta"># 2D卷积层 256表示输出空间的维度 ；(3, 3)表示2D卷积窗口的宽度和高度，单个数时，表示维度值相同；</span></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape = X.shape[<span class="number">1</span>:]))</span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"><span class="meta"># MaxPooling2D,对空间数据的最大池化</span></span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line"><span class="meta"># 设置激活函数</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 调整为1D的特征向量</span></span><br><span class="line">model.<span class="keyword">add</span>(Flatten())</span><br><span class="line"><span class="meta"># 全连接层，设置输出空间维度，即输出数据的尺寸为（*， 64）</span></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">64</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line"><span class="meta"># 设置激活函数sigmoid</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="3-配置学习过程。"><a href="#3-配置学习过程。" class="headerlink" title="3 配置学习过程。"></a>3 配置学习过程。</h5></blockquote><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta"># 主要 配置优化器optimizer，损失函数loss及评估标准metrics</span></span><br><span class="line">model.compile(loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">             optimizer=<span class="string">'adam'</span>,</span><br><span class="line">             metrics = [<span class="string">'accuracy'</span>])</span><br><span class="line">             </span><br></pre></td></tr></table></figure><blockquote><h5 id="4-训练模型。"><a href="#4-训练模型。" class="headerlink" title="4 训练模型。"></a>4 训练模型。</h5></blockquote><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 对样本X, Y进行迭代，批处理样本数<span class="number">32</span>；迭代次数<span class="number">3</span>；作为验证集比例为<span class="number">0.3</span></span><br><span class="line">model.fit(X, Y, batch_size = <span class="number">32</span>, epochs = <span class="number">1</span>, validation_split = <span class="number">0.3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p><em>原文：<a href="https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Convolutional Neural Networks</a></em></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> AI </category>
+          
+          <category> DL basic </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> DL basic </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Deep Learning basics p2:loading custom data</title>
       <link href="/published/2019/03/24/Deep-Learning-basics-p2-loading-custom-data/"/>
       <url>/published/2019/03/24/Deep-Learning-basics-p2-loading-custom-data/</url>
@@ -112,6 +139,25 @@
     
     
     <entry>
+      <title>Welcome to my blog</title>
+      <link href="/published/2019/03/10/welcome/"/>
+      <url>/published/2019/03/10/welcome/</url>
+      
+        <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 欢迎 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CentOS6.5下搭建mongodb主、从、仲裁节点副本集实践</title>
       <link href="/published/2019/03/10/CentOS6-5%E4%B8%8B%E6%90%AD%E5%BB%BAmongodb%E4%B8%BB%E3%80%81%E4%BB%8E%E3%80%81%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9%E5%89%AF%E6%9C%AC%E9%9B%86%E5%AE%9E%E8%B7%B5/"/>
       <url>/published/2019/03/10/CentOS6-5%E4%B8%8B%E6%90%AD%E5%BB%BAmongodb%E4%B8%BB%E3%80%81%E4%BB%8E%E3%80%81%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9%E5%89%AF%E6%9C%AC%E9%9B%86%E5%AE%9E%E8%B7%B5/</url>
@@ -131,25 +177,6 @@
         <tags>
             
             <tag> mongodb </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Welcome to my blog</title>
-      <link href="/published/2019/03/10/welcome/"/>
-      <url>/published/2019/03/10/welcome/</url>
-      
-        <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 欢迎 </tag>
             
         </tags>
       
