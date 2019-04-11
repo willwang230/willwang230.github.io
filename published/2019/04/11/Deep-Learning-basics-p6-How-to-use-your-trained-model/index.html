@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>Deep Learning basics p1: Introduction to Deep Learning | Will&#39;s blog</title>
+  <title>Deep Learning basics p6: How to use your trained model | Will&#39;s blog</title>
   
   
   <meta name="description" content="will go everywhere!">
@@ -198,7 +198,7 @@
   <div class="meta" id="header-meta">
     
       
-          <h1 class="title">Deep Learning basics p1: Introduction to Deep Learning</h1>
+          <h1 class="title">Deep Learning basics p6: How to use your trained model</h1>
       
     
 
@@ -215,7 +215,7 @@
         <div class="new-meta-item date">
           <a class="notlink">
             <i class="fas fa-clock" aria-hidden="true"></i>
-            2019-03-20
+            2019-04-11
           </a>
         </div>
       
@@ -250,22 +250,30 @@
 
     <section class="article typo">
       <div class="article-entry" itemprop="articleBody">
-        <p>通过python、Tensorflow和Keras框架实现的深度学习实例。本文是深度学习的快速入门的第一章，简单介绍神经网络的实现原理，利用tensorflow，采用Keras模型对mnist数据集进行构建，训练和预测流程的简单实现。</p>
-<a id="more"></a>
-<p>简单总结下，不一定正确，只为加深印象。一般包括以下几个步骤：</p>
-<ol>
-<li>导包</li>
-<li>实例化数据集</li>
-<li>建立模型</li>
-<li>配置学习模型</li>
-<li>训练模型</li>
-<li>测试样本</li>
+        <p>本文主要内容：</p>
+<ul>
+<li>加载自定义数据，并设置模型参数</li>
+<li>进行模型训练</li>
 <li>保存模型</li>
-<li>进行预测</li>
-</ol>
-<p>示例代码如下。</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 导包</span></span><br><span class="line"><span class="built_in">import</span> tensorflow as tf <span class="comment">#deep learning library. Tensors are just multi-dimensional arrays</span></span><br><span class="line"><span class="built_in">import</span> matplotlib.pyplot as plt</span><br><span class="line"><span class="built_in">import</span> numpy as np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 实例化数据集</span></span><br><span class="line"><span class="attr">mnist</span> = tf.keras.datasets.mnist <span class="comment"># mnist is a dataset of 28x28 images of handwritten digits and their labels</span></span><br><span class="line"></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data() <span class="comment"># unpacks images to x_train/x_test and labels to y_train/y_test</span></span><br><span class="line"><span class="comment"># print(x_train[0])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 归一化处理，使取值范围在[0, 1]或[-1, 1]</span></span><br><span class="line"><span class="attr">x_train</span> = tf.keras.utils.normalize(x_train, <span class="attr">axis=1)</span> <span class="comment"># scales data between 0 and 1</span></span><br><span class="line"><span class="attr">x_test</span> = tf.keras.utils.normalize(x_test, <span class="attr">axis=1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(x_train[0])</span></span><br><span class="line"><span class="comment"># imshow是设置图片的展示，cmap意思是color map，颜色方案，binary代表是白底黑字；</span></span><br><span class="line"><span class="comment"># plt.imshow(x_train[0], cmap = plt.cm.binary)</span></span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3 建立模型</span></span><br><span class="line"><span class="attr">model</span> = tf.keras.models.Sequential()    <span class="comment"># a basic feed-forward model</span></span><br><span class="line">model.add(tf.keras.layers.Flatten()) <span class="comment"># flatten date ,takes our 28x28 and makes it 1x784  #</span></span><br><span class="line"><span class="comment"># Adds a densely-connected layer with 128 units to the model:</span></span><br><span class="line">model.add(tf.keras.layers.Dense(<span class="number">128</span>, <span class="attr">activation=tf.nn.relu))</span></span><br><span class="line">model.add(tf.keras.layers.Dense(<span class="number">128</span>, <span class="attr">activation=tf.nn.relu))</span></span><br><span class="line"><span class="comment"># Add a softmax layer with 10 output units:</span></span><br><span class="line">model.add(tf.keras.layers.Dense(<span class="number">10</span>, <span class="attr">activation=tf.nn.softmax))</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4 配置学习模型</span></span><br><span class="line">model.compile(<span class="attr">optimizer='adam',</span> <span class="comment"># Good default optimizer to start with  #优化器</span></span><br><span class="line">            <span class="attr">loss='sparse_categorical_crossentropy',#</span> how will we calculate our <span class="string">"error."</span> Neural network aims to minimize loss.   <span class="comment">#优化期间最小化的函数</span></span><br><span class="line">            <span class="comment"># sparse: 稀疏的   categorical:绝对的，无条件的，分类的 crossentropy:交叉熵</span></span><br><span class="line">            <span class="attr">metrics=['accuracy'])</span> <span class="comment"># what to track #用于监控训练</span></span><br><span class="line"><span class="comment"># 5 训练模型 循环轮次：3</span></span><br><span class="line">model.fit(x_train, y_train, <span class="attr">epochs=3)</span>   <span class="comment"># train the model</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6 测试样本</span></span><br><span class="line">val_loss, <span class="attr">val_acc</span> = model.evaluate(x_test, y_test)  <span class="comment"># evaluate the out of sample data with model</span></span><br><span class="line">print(val_loss)  <span class="comment"># model's loss (error)</span></span><br><span class="line">print(val_acc)  <span class="comment"># model's accuracy</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 7 保存</span></span><br><span class="line">model.save('epic_num_reader.model')</span><br><span class="line"><span class="comment"># 重新实例化模型，会创建一个完全一样的模型</span></span><br><span class="line"><span class="attr">new_model</span> = tf.keras.models.load_model('epic_num_reader.model')</span><br><span class="line"></span><br><span class="line"><span class="comment"># 8 预测</span></span><br><span class="line"><span class="attr">predictions</span> = new_model.predict(x_test)</span><br><span class="line">print(predictions)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示数字</span></span><br><span class="line">print(np.argmax(predictions[<span class="number">0</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示数字图像</span></span><br><span class="line">plt.imshow(x_test[<span class="number">0</span>], <span class="attr">cmap</span> = plt.cm.binary)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p>原文：<a href="https://pythonprogramming.net/introduction-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Introduction to Deep Learning - Deep Learning basics with Python, TensorFlow and Keras p.1</a></p>
+<li>调用模型进行实际预测</li>
+</ul>
+<a id="more"></a>
+<blockquote>
+<h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line">from tensorflow.keras.layers <span class="keyword">import</span> Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow.keras.layers <span class="keyword">import</span> Conv2D, MaxPooling2D</span><br><span class="line">from tensorflow.keras.callbacks <span class="keyword">import</span> TensorBoard</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> <span class="built_in">time</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="1-加载数据"><a href="#1-加载数据" class="headerlink" title="1 加载数据"></a>1 加载数据</h5></blockquote>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>,<span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"y.pickle"</span>,<span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">y</span> = pickle.load(pickle_in)</span><br><span class="line"></span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dense_layers</span> = [<span class="number">0</span>]</span><br><span class="line"><span class="attr">layer_sizes</span> = [<span class="number">64</span>]</span><br><span class="line"><span class="attr">conv_layers</span> = [<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="2-进行训练"><a href="#2-进行训练" class="headerlink" title="2 进行训练"></a>2 进行训练</h5></blockquote>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> dense_layer <span class="keyword">in</span> dense_layers:</span><br><span class="line">    <span class="keyword">for</span> layer_size <span class="keyword">in</span> layer_sizes:</span><br><span class="line">        <span class="keyword">for</span> conv_layer <span class="keyword">in</span> conv_layers:</span><br><span class="line">            NAME = <span class="string">"&#123;&#125;-conv-&#123;&#125;-nodes-&#123;&#125;-dense-&#123;&#125;"</span>.<span class="built_in">format</span>(conv_layer, layer_size, dense_layer, int(<span class="built_in">time</span>.<span class="built_in">time</span>()))</span><br><span class="line">            print(NAME)</span><br><span class="line"></span><br><span class="line">            model = Sequential()</span><br><span class="line"></span><br><span class="line">            model.<span class="built_in">add</span>(Conv2D(layer_size, (<span class="number">3</span>, <span class="number">3</span>), input_shape=X.shape[<span class="number">1</span>:]))</span><br><span class="line">            model.<span class="built_in">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">            model.<span class="built_in">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> l <span class="keyword">in</span> range(conv_layer<span class="number">-1</span>):</span><br><span class="line">                model.<span class="built_in">add</span>(Conv2D(layer_size, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line">                model.<span class="built_in">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">                model.<span class="built_in">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">            model.<span class="built_in">add</span>(Flatten())</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> range(dense_layer):</span><br><span class="line">                model.<span class="built_in">add</span>(Dense(layer_size))</span><br><span class="line">                model.<span class="built_in">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"></span><br><span class="line">            model.<span class="built_in">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line">            model.<span class="built_in">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br><span class="line">            tensorboard = TensorBoard(log_dir=<span class="string">"logs/&#123;&#125;"</span>.<span class="built_in">format</span>(NAME))</span><br><span class="line"></span><br><span class="line">            model.compile(loss=<span class="string">'binary_crossentropy'</span>,</span><br><span class="line">                          optimizer=<span class="string">'adam'</span>,</span><br><span class="line">                          metrics=[<span class="string">'accuracy'</span>],</span><br><span class="line">                          )</span><br><span class="line"></span><br><span class="line">            model.fit(X, y,</span><br><span class="line">                      batch_size=<span class="number">32</span>,</span><br><span class="line">                      epochs=<span class="number">10</span>,</span><br><span class="line">                      validation_split=<span class="number">0.3</span>,</span><br><span class="line">                      callbacks=[tensorboard])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="3-保存模型"><a href="#3-保存模型" class="headerlink" title="3 保存模型"></a>3 保存模型</h5></blockquote>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">model</span>.save(<span class="string">'64x3-CNN.model'</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="4-调用模型进行实际预测"><a href="#4-调用模型进行实际预测" class="headerlink" title="4 调用模型进行实际预测"></a>4 调用模型进行实际预测</h5></blockquote>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import cv2</span><br><span class="line">import tensorflow as tf</span><br><span class="line"></span><br><span class="line">CATEGORIES = ["Dog", "Cat"]</span><br><span class="line"></span><br><span class="line"><span class="section"># 对图像进行训练，灰度化、调整大小及重塑</span></span><br><span class="line">def prepare(filepath):</span><br><span class="line"><span class="code">    IMG_SIZE = 70  # 50 in txt-based</span></span><br><span class="line"><span class="code">    img_array = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)</span></span><br><span class="line"><span class="code">    new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))</span></span><br><span class="line"><span class="code">    return new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)</span></span><br><span class="line"></span><br><span class="line">model = tf.keras.models.load_model("64x3-CNN.model") #加载模型</span><br><span class="line"></span><br><span class="line">prediction = model.predict([prepare('dog.jpg')]) #进行预测，需要是列表</span><br><span class="line">print(prediction)</span><br><span class="line"></span><br><span class="line">prediction[<span class="string">0</span>][<span class="symbol">0</span>] #获取实际预测</span><br><span class="line">print(CATEGORIES[<span class="string">int(prediction[0</span>][<span class="symbol">0</span>])])    #获取类别</span><br></pre></td></tr></table></figure>
+<p><em>原文:<a href="https://pythonprogramming.net/using-trained-model-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">How to use your trained model</a></em></p>
 
       </div>
         
@@ -273,10 +281,10 @@
             <hr>
             <div class="new-meta-box">
               
-                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-03-24T17:16:08+08:00">
+                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-04-11T21:35:18+08:00">
                   <a class="notlink">
                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                    2019-03-24
+                    2019-04-11
                   </a>
                 </div>
               
@@ -292,30 +300,14 @@
         
             <div class="prev-next">
                 
-                    <section class="prev">
-                        <span class="art-item-left">
-                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
-                            <h4>
-                                <a href="/published/2019/03/24/CentOS6-5-配置Iptables/" rel="prev" title="CentOS6.5 配置Iptables">
-                                  
-                                      CentOS6.5 配置Iptables
-                                  
-                                </a>
-                            </h4>
-                            
-                                
-                            
-                        </span>
-                    </section>
-                
                 
                     <section class="next">
                         <span class="art-item-right" aria-hidden="true">
                             <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
                             <h4>
-                                <a href="/published/2019/03/19/win7下安装Anaconda3和tensorflow/" rel="prev" title="win7下安装Anaconda3和tensorflow">
+                                <a href="/published/2019/04/02/Deep-Learning-basics-p5-Optimizing-Models-with-TensorBoard/" rel="prev" title="Deep Learning basics p5: Optimizing Models with TensorBoard">
                                     
-                                        win7下安装Anaconda3和tensorflow
+                                        Deep Learning basics p5: Optimizing Models with TensorBoard
                                     
                                 </a>
                             </h4>
@@ -360,7 +352,7 @@
 
 <script>
     window.subData = {
-        title: 'Deep Learning basics p1: Introduction to Deep Learning',
+        title: 'Deep Learning basics p6: How to use your trained model',
         tools: true
     }
 </script>
@@ -428,6 +420,20 @@
       
       
         
+  <section class="toc-wrapper">
+    
+<header class="material">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content material">
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#0-导入依赖包"><span class="toc-text">0 导入依赖包</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-加载数据"><span class="toc-text">1 加载数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-进行训练"><span class="toc-text">2 进行训练</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-保存模型"><span class="toc-text">3 保存模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-调用模型进行实际预测"><span class="toc-text">4 调用模型进行实际预测</span></a></li></ol>
+    </div>
+  </section>
+
 
       
     
