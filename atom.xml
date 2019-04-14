@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://willwang.top/"/>
-  <updated>2019-04-11T13:35:18.603Z</updated>
+  <updated>2019-04-14T03:55:25.139Z</updated>
   <id>https://willwang.top/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Data Analysis basics p1:Introduction</title>
+    <link href="https://willwang.top/published/2019/04/14/Data-Analysis-basics-p1-Introduction/"/>
+    <id>https://willwang.top/published/2019/04/14/Data-Analysis-basics-p1-Introduction/</id>
+    <published>2019-04-13T16:00:00.000Z</published>
+    <updated>2019-04-14T03:55:25.139Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文是python3+pandas数据分析介绍p1，主要包括：</p><ul><li>加载avocado.csv数据集。</li><li>根据条件显示数据的相关信息，顺序、倒序、条件、索引、重置索引及绘图。</li></ul><a id="more"></a><blockquote><h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"># <span class="keyword">import</span> matplotlib</span><br></pre></td></tr></table></figure><blockquote><h5 id="1-加载数据"><a href="#1-加载数据" class="headerlink" title="1 加载数据"></a>1 加载数据</h5></blockquote><p>下载数据集<br>官方：<a href="https://www.kaggle.com/neuromusic/avocado-prices" target="_blank" rel="noopener">Avocado Prices</a><br>本地：<a href="/datasets/avocado-prices.zip">Avocado Prices</a></p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">df</span> = pd.read_csv(<span class="string">"datasets/avocado.csv"</span>)</span><br></pre></td></tr></table></figure><blockquote><h5 id="2-对数据进行简单操作"><a href="#2-对数据进行简单操作" class="headerlink" title="2 对数据进行简单操作"></a>2 对数据进行简单操作</h5></blockquote><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 顺序</span></span><br><span class="line">df.head()</span><br><span class="line"><span class="meta"># 显示前3条</span></span><br><span class="line">df.head(<span class="number">3</span>)</span><br><span class="line"><span class="meta"># 逆序</span></span><br><span class="line">df.tail(<span class="number">6</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta"># 显示指定的列</span></span><br><span class="line">df[<span class="string">'AveragePrice'</span>].head()</span><br><span class="line"></span><br><span class="line">df.AveragePrice.head()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 显示指定区域</span></span><br><span class="line">albany_df = df[df[<span class="string">'region'</span>] == <span class="string">"Albany"</span>]</span><br><span class="line">albany_df.head()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 显示索引</span></span><br><span class="line">albany_df.index</span><br><span class="line"></span><br><span class="line"><span class="meta"># 重设索引</span></span><br><span class="line">albany_df.set_index(<span class="string">"Date"</span>)</span><br><span class="line">albany_df.head()</span><br><span class="line"></span><br><span class="line"><span class="meta"># albany_df.set_index("Date", inplace=True)</span></span><br><span class="line"><span class="meta"># 绘图</span></span><br><span class="line">albany_df[<span class="string">'AveragePrice'</span>].plot()</span><br></pre></td></tr></table></figure><p><em>原文:<a href="https://pythonprogramming.net/introduction-python3-pandas-data-analysis/" target="_blank" rel="noopener">Introduction</a></em></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文是python3+pandas数据分析介绍p1，主要包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加载avocado.csv数据集。&lt;/li&gt;
+&lt;li&gt;根据条件显示数据的相关信息，顺序、倒序、条件、索引、重置索引及绘图。&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="AI" scheme="https://willwang.top/categories/AI/"/>
+    
+      <category term="DA basic" scheme="https://willwang.top/categories/AI/DA-basic/"/>
+    
+    
+      <category term="DA basic" scheme="https://willwang.top/tags/DA-basic/"/>
+    
+  </entry>
   
   <entry>
     <title>Deep Learning basics p6: How to use your trained model</title>
