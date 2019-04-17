@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>Archives: 2019/4 | Will&#39;s blog</title>
+  <title>Deep Learning basics p7: Recurrent neural networks | Will&#39;s blog</title>
   
   
   <meta name="description" content="will go everywhere!">
@@ -202,136 +202,16 @@
     <div class="l_body">
     <div class='container clearfix'>
         <div class='l_main'>
-            
-	
-    <script>
-        window.subData= { title:'year : 2019.4'}
-    </script>
-
-
-
-
-  <section class="post-list">
-      
-        
-          
-        
-          
-            <div class="post-wrapper">
-              <article class="post reveal ">
-    
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
 <section class="meta">
   
   
   <div class="meta" id="header-meta">
     
-      <h2 class="title">
-          <a href="/published/2019/03/10/welcome/">
-              
-                  Welcome to my blog
-              
-          </a>
-      </h2>
-    
-
-    <div class="new-meta-box">
       
-        <div class="new-meta-item author">
-          <a href="https://willwang.top">
-            <i class="fas fa-user" aria-hidden="true"></i>
-            willwang
-          </a>
-        </div>
+          <h1 class="title">Deep Learning basics p7: Recurrent neural networks</h1>
       
-      
-        <div class="new-meta-item date">
-          <a class="notlink">
-            <i class="fas fa-clock" aria-hidden="true"></i>
-            2019-03-10
-          </a>
-        </div>
-      
-      
-        
-      
-      
-      
-        <div class="new-meta-item top-post">
-          <a class="notlink">
-            <i class="fas fa-angle-double-up" aria-hidden="true"></i>
-            置顶
-          </a>
-        </div>
-      
-    </div>
-    <hr>
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>欢迎访问我的博客，希望留下你美丽的足记。</p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/欢迎/"><i class="fas fa-hashtag fa-fw"></i>欢迎</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-            </div>
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-
-
-
-      
-
-      
-
-      
-        
-          
-            <div class="post-wrapper">
-              <article class="post reveal ">
-    
-<section class="meta">
-  
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/published/2019/04/17/Deep-Learning-basics-p7-Recurrent-neural-networks/">
-              
-                  Deep Learning basics p7: Recurrent neural networks
-              
-          </a>
-      </h2>
     
 
     <div class="new-meta-box">
@@ -363,6 +243,17 @@
         
       
       
+        
+          <div class="new-meta-item browse busuanzi">
+            <a class="notlink">
+              <i class="fas fa-eye" aria-hidden="true"></i>
+              <span id="busuanzi_value_page_pv">
+                <i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i>
+              </span>
+            </a>
+          </div>
+        
+      
       
     </div>
     <hr>
@@ -370,6 +261,7 @@
 </section>
 
     <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
         <p>本文主要内容：</p>
 <ul>
 <li>加载mnist数据集</li>
@@ -378,297 +270,108 @@
 <li>配置学习过程</li>
 <li>训练模型</li>
 </ul>
+<a id="more"></a>
+<blockquote>
+<h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="title">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="title">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense, Dropout, LSTM</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="1-加载数据"><a href="#1-加载数据" class="headerlink" title="1 加载数据"></a>1 加载数据</h5></blockquote>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mnist = tf.keras.datasets.mnist</span><br><span class="line">(x_train, y_train),(x_test, y_test) = mnist.load_data()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 归一化处理</span></span><br><span class="line">x_train = x_train/255.0</span><br><span class="line">x_test = x_test/255.0</span><br><span class="line"></span><br><span class="line">print(x_train.shape)</span><br><span class="line">print(x_train[0].shape)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="2-构建模型"><a href="#2-构建模型" class="headerlink" title="2 构建模型"></a>2 构建模型</h5></blockquote>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">model = Sequential()</span><br><span class="line"><span class="comment"># 栈式 LSTM 的序列分类</span></span><br><span class="line"><span class="comment"># use LSTM cell 返回维度为128的向量序列</span></span><br><span class="line">model.<span class="builtin-name">add</span>(LSTM(128, input_shape=(x_train.shape[1:]), <span class="attribute">activation</span>=<span class="string">'relu'</span>, <span class="attribute">return_sequences</span>=<span class="literal">True</span>))</span><br><span class="line"><span class="comment"># dropout:设置输入丢弃的比例</span></span><br><span class="line">model.<span class="builtin-name">add</span>(Dropout(0.2))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 返回维度为128的单个向量</span></span><br><span class="line">model.<span class="builtin-name">add</span>(LSTM(128, <span class="attribute">activation</span>=<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="builtin-name">add</span>(Dropout(0.1))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出数据的尺寸为(*, 32)</span></span><br><span class="line">model.<span class="builtin-name">add</span>(Dense(32, <span class="attribute">activation</span>=<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="builtin-name">add</span>(Dropout(0.2))</span><br><span class="line"></span><br><span class="line">model.<span class="builtin-name">add</span>(Dense(10, <span class="attribute">activation</span>=<span class="string">'softmax'</span>))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="3-自定义优化器"><a href="#3-自定义优化器" class="headerlink" title="3 自定义优化器"></a>3 自定义优化器</h5></blockquote>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lr:学习率，decay：每次更新后，学习率衰减值</span></span><br><span class="line">opt = tf.keras.optimizers.Adam(<span class="attribute">lr</span>=0.001, <span class="attribute">decay</span>=1e-6)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="4-配置学习过程"><a href="#4-配置学习过程" class="headerlink" title="4 配置学习过程"></a>4 配置学习过程</h5></blockquote>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">model</span>.compile(</span><br><span class="line">    loss = <span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">    optimizer = opt,</span><br><span class="line">    metrics = [<span class="string">'accuracy'</span>],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h5 id="5-训练模型"><a href="#5-训练模型" class="headerlink" title="5 训练模型"></a>5 训练模型</h5></blockquote>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中，循环轮次3；作为验证集比例为0.3</span></span><br><span class="line">model.fit<span class="params">(x_train,</span></span><br><span class="line"><span class="params">         y_train,</span></span><br><span class="line"><span class="params">          <span class="attr">epochs</span> = 3,</span></span><br><span class="line"><span class="params">          <span class="attr">validation_data</span> = (x_test, y_test)</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p><em>原文:<a href="https://pythonprogramming.net/recurrent-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Recurrent Neural Networks</a></em></p>
+
+      </div>
         
-            <div class="readmore">
-                <a href="/published/2019/04/17/Deep-Learning-basics-p7-Recurrent-neural-networks/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
+          <section class="meta" id="footer-meta">
+            <hr>
+            <div class="new-meta-box">
+              
+                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-04-17T23:19:17+08:00">
+                  <a class="notlink">
+                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                    2019-04-17
+                  </a>
+                </div>
+              
+              
+                
+                <div class="new-meta-item meta-tags"><a class="tag" href="/tags/DL-basic/"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;DL basic</a></div>
+              
+              
             </div>
+          </section>
         
 
         
-            <div class="full-width auto-padding tags">
+            <div class="prev-next">
                 
-                    <a href="/tags/DL-basic/"><i class="fas fa-hashtag fa-fw"></i>DL basic</a>
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/published/2019/04/14/Data-Analysis-basics-p1-Introduction/" rel="prev" title="Data Analysis basics p1:Introduction">
+                                    
+                                        Data Analysis basics p1:Introduction
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                            
+                        </span>
+                    </section>
                 
             </div>
         
+
     </section>
+
 </article>
 
-            </div>
-          
-        
-          
-            <div class="post-wrapper">
-              <article class="post reveal ">
-    
-<section class="meta">
-  
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/published/2019/04/14/Data-Analysis-basics-p1-Introduction/">
-              
-                  Data Analysis basics p1:Introduction
-              
-          </a>
-      </h2>
-    
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
 
-    <div class="new-meta-box">
-      
-        <div class="new-meta-item author">
-          <a href="https://willwang.top">
-            <i class="fas fa-user" aria-hidden="true"></i>
-            willwang
-          </a>
-        </div>
-      
-      
-        <div class="new-meta-item date">
-          <a class="notlink">
-            <i class="fas fa-clock" aria-hidden="true"></i>
-            2019-04-14
-          </a>
-        </div>
-      
-      
-        
-          
-          <div class="new-meta-item category">
-            <a href="/categories/AI/DA-basic/">
-              <i class="fas fa-folder-open" aria-hidden="true"></i>
-              AI&nbsp;/&nbsp;DA basic
-            </a>
-          </div>
-        
-      
-      
-      
-    </div>
-    <hr>
-  </div>
-</section>
 
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
     <section class="article typo">
-        <p>本文是python3+pandas数据分析介绍p1，主要包括：</p>
-<ul>
-<li>加载avocado.csv数据集。</li>
-<li>根据条件显示数据的相关信息，顺序、倒序、条件、索引、重置索引及绘图。</li>
-</ul>
-        
-            <div class="readmore">
-                <a href="/published/2019/04/14/Data-Analysis-basics-p1-Introduction/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/DA-basic/"><i class="fas fa-hashtag fa-fw"></i>DA basic</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-            </div>
-          
-        
-          
-            <div class="post-wrapper">
-              <article class="post reveal ">
-    
-<section class="meta">
-  
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/published/2019/04/11/Deep-Learning-basics-p6-How-to-use-your-trained-model/">
-              
-                  Deep Learning basics p6: How to use your trained model
-              
-          </a>
-      </h2>
-    
-
-    <div class="new-meta-box">
-      
-        <div class="new-meta-item author">
-          <a href="https://willwang.top">
-            <i class="fas fa-user" aria-hidden="true"></i>
-            willwang
-          </a>
-        </div>
+      <h4><i class="fas fa-comments fa-fw" aria-hidden="true"></i>&nbsp;评论</h4>
       
       
-        <div class="new-meta-item date">
-          <a class="notlink">
-            <i class="fas fa-clock" aria-hidden="true"></i>
-            2019-04-11
-          </a>
-        </div>
       
-      
-        
-          
-          <div class="new-meta-item category">
-            <a href="/categories/AI/DL-basic/">
-              <i class="fas fa-folder-open" aria-hidden="true"></i>
-              AI&nbsp;/&nbsp;DL basic
-            </a>
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-spinner fa-spin fa-fw"></i>
           </div>
-        
+        </section>
       
-      
-      
-    </div>
-    <hr>
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>本文主要内容：</p>
-<ul>
-<li>加载自定义数据，并设置模型参数</li>
-<li>进行模型训练</li>
-<li>保存模型</li>
-<li>调用模型进行实际预测</li>
-</ul>
-        
-            <div class="readmore">
-                <a href="/published/2019/04/11/Deep-Learning-basics-p6-How-to-use-your-trained-model/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/DL-basic/"><i class="fas fa-hashtag fa-fw"></i>DL basic</a>
-                
-            </div>
-        
     </section>
-</article>
-
-            </div>
-          
-        
-          
-            <div class="post-wrapper">
-              <article class="post reveal ">
-    
-<section class="meta">
-  
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/published/2019/04/02/Deep-Learning-basics-p5-Optimizing-Models-with-TensorBoard/">
-              
-                  Deep Learning basics p5: Optimizing Models with TensorBoard
-              
-          </a>
-      </h2>
-    
-
-    <div class="new-meta-box">
-      
-        <div class="new-meta-item author">
-          <a href="https://willwang.top">
-            <i class="fas fa-user" aria-hidden="true"></i>
-            willwang
-          </a>
-        </div>
-      
-      
-        <div class="new-meta-item date">
-          <a class="notlink">
-            <i class="fas fa-clock" aria-hidden="true"></i>
-            2019-04-02
-          </a>
-        </div>
-      
-      
-        
-          
-          <div class="new-meta-item category">
-            <a href="/categories/AI/DL-basic/">
-              <i class="fas fa-folder-open" aria-hidden="true"></i>
-              AI&nbsp;/&nbsp;DL basic
-            </a>
-          </div>
-        
-      
-      
-      
-    </div>
-    <hr>
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>本文主要内容：</p>
-<ul>
-<li>加载自定义数据，并设置模型参数</li>
-<li>优化参数，进行模型训练</li>
-<li>查看训练状态</li>
-</ul>
-        
-            <div class="readmore">
-                <a href="/published/2019/04/02/Deep-Learning-basics-p5-Optimizing-Models-with-TensorBoard/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/DL-basic/"><i class="fas fa-hashtag fa-fw"></i>DL basic</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-            </div>
-          
-        
-      
-
-  </section>
+  </article>
 
 
 
-
-
-
-  
-
-  <!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
-  
-
-  
-
-
-
-
-
-<!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
-
-
+<script>
+    window.subData = {
+        title: 'Deep Learning basics p7: Recurrent neural networks',
+        tools: true
+    }
+</script>
 
 
         </div>
@@ -733,6 +436,20 @@
       
       
         
+  <section class="toc-wrapper">
+    
+<header class="material">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content material">
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#0-导入依赖包"><span class="toc-text">0 导入依赖包</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-加载数据"><span class="toc-text">1 加载数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-构建模型"><span class="toc-text">2 构建模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-自定义优化器"><span class="toc-text">3 自定义优化器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-配置学习过程"><span class="toc-text">4 配置学习过程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-训练模型"><span class="toc-text">5 训练模型</span></a></li></ol>
+    </div>
+  </section>
+
 
       
     
