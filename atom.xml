@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://willwang.top/"/>
-  <updated>2019-04-17T15:19:17.837Z</updated>
+  <updated>2019-04-21T08:41:09.921Z</updated>
   <id>https://willwang.top/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Data Analysis basics p2:Graphing/visualization</title>
+    <link href="https://willwang.top/published/2019/04/21/Data-Analysis-basics-p2-Graphing-visualization/"/>
+    <id>https://willwang.top/published/2019/04/21/Data-Analysis-basics-p2-Graphing-visualization/</id>
+    <published>2019-04-20T16:00:00.000Z</published>
+    <updated>2019-04-21T08:41:09.921Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文是python3+pandas数据分析p2:图形及可视化，主要包括：</p><ul><li>对数据进行可视化操作。</li></ul><a id="more"></a><blockquote><h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br></pre></td></tr></table></figure><blockquote><h5 id="1-加载数据集"><a href="#1-加载数据集" class="headerlink" title="1 加载数据集"></a>1 加载数据集</h5></blockquote><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">df</span> = pd.read_csv(<span class="string">"datasets/avocado.csv"</span>)</span><br></pre></td></tr></table></figure><blockquote><h5 id="2-图形及可视化操作"><a href="#2-图形及可视化操作" class="headerlink" title="2 图形及可视化操作"></a>2 图形及可视化操作</h5></blockquote><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 字符串时间进行格式转化</span><br><span class="line">df[<span class="string">'Date'</span>] = pd.to_datetime(df[<span class="string">'Date'</span>])</span><br><span class="line">albany_df = df[df[<span class="string">'region'</span>]==<span class="string">"Albany"</span>]</span><br><span class="line">albany_df.set_index(<span class="string">"Date"</span>, inplace=<span class="symbol">True</span>)</span><br><span class="line"># 绘制<span class="symbol">Albany</span>随时间变化的曲线</span><br><span class="line">albany_df[<span class="string">"AveragePrice"</span>].plot()</span><br></pre></td></tr></table></figure><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 采用滚动平均值进行平滑数据</span></span><br><span class="line">albany_df[<span class="string">"AveragePrice"</span>]<span class="string">.rolling</span><span class="params">(25)</span><span class="string">.mean</span><span class="params">()</span><span class="string">.plot</span><span class="params">()</span></span><br></pre></td></tr></table></figure><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 索引排序,此处会有告警，A value <span class="keyword">is</span> trying <span class="keyword">to</span> be <span class="keyword">set</span> <span class="keyword">on</span> a <span class="keyword">copy</span> <span class="keyword">of</span> a slice <span class="keyword">from</span> a DataFrame</span><br><span class="line">albany_df.sort_index(inplace=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">albany_df</span><span class="selector-attr">["AveragePrice"]</span><span class="selector-class">.rolling</span>(25)<span class="selector-class">.mean</span>()<span class="selector-class">.plot</span>()</span><br></pre></td></tr></table></figure><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将得到的数据添加到新的列，此处会有告警</span></span><br><span class="line">albany_df[<span class="string">"price25ma"</span>] = albany_df[<span class="string">"AveragePrice"</span>]<span class="string">.rolling</span><span class="params">(25)</span><span class="string">.mean</span><span class="params">()</span></span><br></pre></td></tr></table></figure><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">albany_df</span><span class="selector-class">.head</span>()</span><br></pre></td></tr></table></figure><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">albany_df</span><span class="selector-class">.tail</span>()</span><br></pre></td></tr></table></figure><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 忽略告警操作</span><br><span class="line">albany_df = df.copy()[df[<span class="string">'region'</span>]==<span class="string">"Albany"</span>]</span><br><span class="line">albany_df.set_index(<span class="string">'Date'</span>, inplace=<span class="symbol">True</span>)</span><br><span class="line">albany_df[<span class="string">"price25ma"</span>] = albany_df[<span class="string">"AveragePrice"</span>].rolling(<span class="number">25</span>).mean()</span><br></pre></td></tr></table></figure><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 获取指定列数据</span></span><br><span class="line">df[<span class="string">'region'</span>]</span><br></pre></td></tr></table></figure><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 转化为数组</span></span><br><span class="line">df[<span class="string">'region'</span>].values</span><br></pre></td></tr></table></figure><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 转化为列表</span></span><br><span class="line">df[<span class="string">'region'</span>].values.tolist()</span><br><span class="line"><span class="meta"># 打印</span></span><br><span class="line">print(<span class="keyword">set</span>(df[<span class="string">'region'</span>].values.tolist()))</span><br></pre></td></tr></table></figure><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 显示唯一值</span></span><br><span class="line">df[<span class="string">'region'</span>].unique()</span><br></pre></td></tr></table></figure><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">graph_df = pd.DataFrame()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> region <span class="keyword">in</span> df[<span class="string">'region'</span>].unique()[:<span class="number">16</span>]:</span><br><span class="line">    print(region)</span><br><span class="line">    region_df = df.copy()[df[<span class="string">'region'</span>]==region]</span><br><span class="line">    region_df.set_index(<span class="string">'Date'</span>, inplace=<span class="keyword">True</span>)</span><br><span class="line">    region_df.sort_index(inplace=<span class="keyword">True</span>)</span><br><span class="line">    region_df[<span class="string">f"<span class="subst">&#123;region&#125;</span>_price25ma"</span>] = region_df[<span class="string">"AveragePrice"</span>].rolling(<span class="number">25</span>).mean()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> graph_df.empty:</span><br><span class="line">        graph_df = region_df[[<span class="string">f"<span class="subst">&#123;region&#125;</span>_price25ma"</span>]]  <span class="comment"># note the double square brackets! 双中括号</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        graph_df = graph_df.join(region_df[<span class="string">f"<span class="subst">&#123;region&#125;</span>_price25ma"</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示结果为重复数据</span></span><br><span class="line">graph_df.tail()</span><br></pre></td></tr></table></figure><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">df = pd.read_csv(<span class="string">"datasets/avocado.csv"</span>)</span><br><span class="line"># 选取价格的一种方式 分为：Organic（有机的） 和 Conventional（常规的）</span><br><span class="line">df = df.copy()[df[<span class="string">'type'</span>]==<span class="string">'organic'</span>]</span><br><span class="line"></span><br><span class="line">df[<span class="string">"Date"</span>] = pd.to_datetime(df[<span class="string">"Date"</span>])</span><br><span class="line"></span><br><span class="line">df.sort_values(by=<span class="string">"Date"</span>, ascending=<span class="literal">True</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">df.head()</span><br></pre></td></tr></table></figure><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">graph_df = pd.DataFrame()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> region <span class="keyword">in</span> df[<span class="string">'region'</span>].unique():</span><br><span class="line">    region_df = df.copy()[df[<span class="string">'region'</span>]==region]</span><br><span class="line">    region_df.set_index(<span class="string">'Date'</span>, inplace=<span class="keyword">True</span>)</span><br><span class="line">    region_df.sort_index(inplace=<span class="keyword">True</span>)</span><br><span class="line">    region_df[<span class="string">f"<span class="subst">&#123;region&#125;</span>_price25ma"</span>] = region_df[<span class="string">"AveragePrice"</span>].rolling(<span class="number">25</span>).mean()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> graph_df.empty:</span><br><span class="line">        graph_df = region_df[[<span class="string">f"<span class="subst">&#123;region&#125;</span>_price25ma"</span>]]  <span class="comment"># note the double square brackets! (so df rather than series)</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        graph_df = graph_df.join(region_df[<span class="string">f"<span class="subst">&#123;region&#125;</span>_price25ma"</span>])</span><br><span class="line"><span class="comment"># 再次显示，正常</span></span><br><span class="line">graph_df.tail()</span><br></pre></td></tr></table></figure><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">graph_df.dropna().plot(figsize=(8,5), <span class="attribute">legend</span>=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure><p><em>原文:<a href="https://pythonprogramming.net/graph-visualization-python3-pandas-data-analysis/" target="_blank" rel="noopener">Graphing/visualization</a></em></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文是python3+pandas数据分析p2:图形及可视化，主要包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对数据进行可视化操作。&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="AI" scheme="https://willwang.top/categories/AI/"/>
+    
+      <category term="DA basic" scheme="https://willwang.top/categories/AI/DA-basic/"/>
+    
+    
+      <category term="DA basic" scheme="https://willwang.top/tags/DA-basic/"/>
+    
+  </entry>
   
   <entry>
     <title>Deep Learning basics p7: Recurrent neural networks</title>
@@ -135,6 +162,36 @@
   </entry>
   
   <entry>
+    <title>Deep Learning basics p3: Convolutional Neural Networks</title>
+    <link href="https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/"/>
+    <id>https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/</id>
+    <published>2019-03-29T16:00:00.000Z</published>
+    <updated>2019-03-30T08:54:30.286Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文主要包括：</p><ul><li>加载自定义数据</li><li>构建顺序模型，并对模型进行堆叠</li><li>配置学习过程</li><li>训练数据</li></ul><a id="more"></a><blockquote><h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.models</span> import Sequential</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Conv2D, MaxPooling2D</span><br><span class="line"></span><br><span class="line">import pickle</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="1-加载数据。"><a href="#1-加载数据。" class="headerlink" title="1 加载数据。"></a>1 加载数据。</h5></blockquote><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># X为输入数据</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># Y为标签</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"Y.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">Y</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"><span class="comment"># print(Y)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="2-构建模型。"><a href="#2-构建模型。" class="headerlink" title="2 构建模型。"></a>2 构建模型。</h5></blockquote><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 堆叠模型。</span></span><br><span class="line"><span class="meta"># 2D卷积层 256表示输出空间的维度 ；(3, 3)表示2D卷积窗口的宽度和高度，单个数时，表示维度值相同；</span></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape = X.shape[<span class="number">1</span>:]))</span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"><span class="meta"># MaxPooling2D,对空间数据的最大池化</span></span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line"><span class="meta"># 设置激活函数</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 调整为1D的特征向量</span></span><br><span class="line">model.<span class="keyword">add</span>(Flatten())</span><br><span class="line"><span class="meta"># 全连接层，设置输出空间维度，即输出数据的尺寸为（*， 64）</span></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">64</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line"><span class="meta"># 设置激活函数sigmoid</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="3-配置学习过程。"><a href="#3-配置学习过程。" class="headerlink" title="3 配置学习过程。"></a>3 配置学习过程。</h5></blockquote><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta"># 主要 配置优化器optimizer，损失函数loss及评估标准metrics</span></span><br><span class="line">model.compile(loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">             optimizer=<span class="string">'adam'</span>,</span><br><span class="line">             metrics = [<span class="string">'accuracy'</span>])</span><br><span class="line">             </span><br></pre></td></tr></table></figure><blockquote><h5 id="4-训练模型。"><a href="#4-训练模型。" class="headerlink" title="4 训练模型。"></a>4 训练模型。</h5></blockquote><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 对样本X, Y进行迭代，批处理样本数<span class="number">32</span>；迭代次数<span class="number">3</span>；作为验证集比例为<span class="number">0.3</span></span><br><span class="line">model.fit(X, Y, batch_size = <span class="number">32</span>, epochs = <span class="number">1</span>, validation_split = <span class="number">0.3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p><em>原文：<a href="https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Convolutional Neural Networks</a></em></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文主要包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加载自定义数据&lt;/li&gt;
+&lt;li&gt;构建顺序模型，并对模型进行堆叠&lt;/li&gt;
+&lt;li&gt;配置学习过程&lt;/li&gt;
+&lt;li&gt;训练数据&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="AI" scheme="https://willwang.top/categories/AI/"/>
+    
+      <category term="DL basic" scheme="https://willwang.top/categories/AI/DL-basic/"/>
+    
+    
+      <category term="DL basic" scheme="https://willwang.top/tags/DL-basic/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Deep Learning basics p4: Analyzing Models with TensorBoard</title>
     <link href="https://willwang.top/published/2019/03/30/Deep-Learning-basics-p4-Analyzing-Models-with-TensorBoard/"/>
     <id>https://willwang.top/published/2019/03/30/Deep-Learning-basics-p4-Analyzing-Models-with-TensorBoard/</id>
@@ -152,36 +209,6 @@
 &lt;li&gt;配置学习过程&lt;/li&gt;
 &lt;li&gt;训练数据&lt;/li&gt;
 &lt;li&gt;通过调用回调函数，查看训练过程的状态&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-      <category term="AI" scheme="https://willwang.top/categories/AI/"/>
-    
-      <category term="DL basic" scheme="https://willwang.top/categories/AI/DL-basic/"/>
-    
-    
-      <category term="DL basic" scheme="https://willwang.top/tags/DL-basic/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Deep Learning basics p3: Convolutional Neural Networks</title>
-    <link href="https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/"/>
-    <id>https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/</id>
-    <published>2019-03-29T16:00:00.000Z</published>
-    <updated>2019-03-30T08:54:30.286Z</updated>
-    
-    <content type="html"><![CDATA[<p>本文主要包括：</p><ul><li>加载自定义数据</li><li>构建顺序模型，并对模型进行堆叠</li><li>配置学习过程</li><li>训练数据</li></ul><a id="more"></a><blockquote><h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.models</span> import Sequential</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Conv2D, MaxPooling2D</span><br><span class="line"></span><br><span class="line">import pickle</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="1-加载数据。"><a href="#1-加载数据。" class="headerlink" title="1 加载数据。"></a>1 加载数据。</h5></blockquote><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># X为输入数据</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># Y为标签</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"Y.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">Y</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"><span class="comment"># print(Y)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="2-构建模型。"><a href="#2-构建模型。" class="headerlink" title="2 构建模型。"></a>2 构建模型。</h5></blockquote><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 堆叠模型。</span></span><br><span class="line"><span class="meta"># 2D卷积层 256表示输出空间的维度 ；(3, 3)表示2D卷积窗口的宽度和高度，单个数时，表示维度值相同；</span></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape = X.shape[<span class="number">1</span>:]))</span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"><span class="meta"># MaxPooling2D,对空间数据的最大池化</span></span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line"><span class="meta"># 设置激活函数</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 调整为1D的特征向量</span></span><br><span class="line">model.<span class="keyword">add</span>(Flatten())</span><br><span class="line"><span class="meta"># 全连接层，设置输出空间维度，即输出数据的尺寸为（*， 64）</span></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">64</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line"><span class="meta"># 设置激活函数sigmoid</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="3-配置学习过程。"><a href="#3-配置学习过程。" class="headerlink" title="3 配置学习过程。"></a>3 配置学习过程。</h5></blockquote><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta"># 主要 配置优化器optimizer，损失函数loss及评估标准metrics</span></span><br><span class="line">model.compile(loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">             optimizer=<span class="string">'adam'</span>,</span><br><span class="line">             metrics = [<span class="string">'accuracy'</span>])</span><br><span class="line">             </span><br></pre></td></tr></table></figure><blockquote><h5 id="4-训练模型。"><a href="#4-训练模型。" class="headerlink" title="4 训练模型。"></a>4 训练模型。</h5></blockquote><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 对样本X, Y进行迭代，批处理样本数<span class="number">32</span>；迭代次数<span class="number">3</span>；作为验证集比例为<span class="number">0.3</span></span><br><span class="line">model.fit(X, Y, batch_size = <span class="number">32</span>, epochs = <span class="number">1</span>, validation_split = <span class="number">0.3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p><em>原文：<a href="https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Convolutional Neural Networks</a></em></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;本文主要包括：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;加载自定义数据&lt;/li&gt;
-&lt;li&gt;构建顺序模型，并对模型进行堆叠&lt;/li&gt;
-&lt;li&gt;配置学习过程&lt;/li&gt;
-&lt;li&gt;训练数据&lt;/li&gt;
 &lt;/ul&gt;
     
     </summary>
@@ -297,30 +324,6 @@
   </entry>
   
   <entry>
-    <title>Welcome to my blog</title>
-    <link href="https://willwang.top/published/2019/03/10/welcome/"/>
-    <id>https://willwang.top/published/2019/03/10/welcome/</id>
-    <published>2019-03-09T16:00:00.000Z</published>
-    <updated>2019-03-10T04:39:26.443Z</updated>
-    
-    <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;欢迎访问我的博客，希望留下你美丽的足记。&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
-      <category term="欢迎" scheme="https://willwang.top/tags/%E6%AC%A2%E8%BF%8E/"/>
-    
-  </entry>
-  
-  <entry>
     <title>CentOS6.5下搭建mongodb主、从、仲裁节点副本集实践</title>
     <link href="https://willwang.top/published/2019/03/10/CentOS6-5%E4%B8%8B%E6%90%AD%E5%BB%BAmongodb%E4%B8%BB%E3%80%81%E4%BB%8E%E3%80%81%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9%E5%89%AF%E6%9C%AC%E9%9B%86%E5%AE%9E%E8%B7%B5/"/>
     <id>https://willwang.top/published/2019/03/10/CentOS6-5下搭建mongodb主、从、仲裁节点副本集实践/</id>
@@ -346,6 +349,30 @@
     
     
       <category term="mongodb" scheme="https://willwang.top/tags/mongodb/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Welcome to my blog</title>
+    <link href="https://willwang.top/published/2019/03/10/welcome/"/>
+    <id>https://willwang.top/published/2019/03/10/welcome/</id>
+    <published>2019-03-09T16:00:00.000Z</published>
+    <updated>2019-03-10T04:39:26.443Z</updated>
+    
+    <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;欢迎访问我的博客，希望留下你美丽的足记。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="欢迎" scheme="https://willwang.top/tags/%E6%AC%A2%E8%BF%8E/"/>
     
   </entry>
   
