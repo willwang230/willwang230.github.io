@@ -22,13 +22,6 @@
     </url>
 
     <url>
-        <loc>https://willwang.top/categories/Linux/</loc>
-        <lastmod>2019-03-24T09:11:36.356Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://willwang.top/categories/Linux/linux%E9%85%8D%E7%BD%AE/</loc>
         <lastmod>2019-03-24T09:11:36.356Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -59,6 +52,20 @@
     <url>
         <loc>https://willwang.top/categories/AI/DA-basic/</loc>
         <lastmod>2019-04-21T08:41:09.921Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://willwang.top/categories/Linux/</loc>
+        <lastmod>2019-05-03T17:09:39.868Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://willwang.top/categories/Linux/java%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</loc>
+        <lastmod>2019-05-03T17:09:39.868Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

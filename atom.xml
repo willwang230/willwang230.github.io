@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://willwang.top/"/>
-  <updated>2019-04-21T08:41:09.921Z</updated>
+  <updated>2019-05-03T17:09:39.868Z</updated>
   <id>https://willwang.top/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Centos7下nexus 3.16 安装、配置、批量导入本地maven包及开机自启设置</title>
+    <link href="https://willwang.top/published/2019/05/03/Centos7%E4%B8%8Bnexus-3-16-%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E3%80%81%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0maven%E5%8C%85%E5%8F%8A%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E8%AE%BE%E7%BD%AE/"/>
+    <id>https://willwang.top/published/2019/05/03/Centos7下nexus-3-16-安装、配置、批量导入本地maven包及开机自启设置/</id>
+    <published>2019-05-02T16:00:00.000Z</published>
+    <updated>2019-05-03T17:09:39.868Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文包括：<br>nexus 3.16 安装、配置，批量导入本地maven包及开机自启设置。</p><a id="more"></a><blockquote><h2 id="0-准备"><a href="#0-准备" class="headerlink" title="0    准备"></a>0    准备</h2></blockquote><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">配置<span class="selector-tag">java</span>环境，<span class="selector-tag">jdk1</span><span class="selector-class">.8</span></span><br><span class="line">配置<span class="selector-tag">Maven</span>环境，<span class="selector-tag">maven-3</span><span class="selector-class">.6</span><span class="selector-class">.1</span></span><br></pre></td></tr></table></figure><blockquote><h2 id="1-下载nexus"><a href="#1-下载nexus" class="headerlink" title="1    下载nexus"></a>1    下载nexus</h2></blockquote><p>下载：<br><a href="https://sonatype-download.global.ssl.fastly.net/repository/repositoryManager/3/nexus-3.16.1-02-unix.tar.gz，如nexus-3.16.1-02-unix.tar.gz" target="_blank" rel="noopener">https://sonatype-download.global.ssl.fastly.net/repository/repositoryManager/3/nexus-3.16.1-02-unix.tar.gz，如nexus-3.16.1-02-unix.tar.gz</a><br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nexus<span class="number">-3.16</span><span class="number">.1</span><span class="number">-02</span>-unix.tar.gz -c /opt/</span><br><span class="line">mv /opt/nexus<span class="number">-3.16</span><span class="number">.1</span> /opt/nexus</span><br></pre></td></tr></table></figure></p><blockquote><h2 id="2-启动"><a href="#2-启动" class="headerlink" title="2    启动"></a>2    启动</h2></blockquote><h3 id="2-1-启动nexus"><a href="#2-1-启动nexus" class="headerlink" title="2.1 启动nexus"></a>2.1 启动nexus</h3><p>cd /opt/nexus/nexus-3.16.1-02/bin/<br><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">./nexus</span> <span class="comment">#查看启动命令</span></span><br><span class="line"><span class="string">./nexus</span> start <span class="comment">#后台启动</span></span><br><span class="line"><span class="string">./nexus</span> run <span class="comment">#前台启动，显示启动日志</span></span><br></pre></td></tr></table></figure></p><p><strong>注意</strong>：如果是在虚拟机环境，需要剩余磁盘空间大于4g ，否则不能启动</p><p>修改为以root方式启动<br>vi nexus.rc<br>修改为：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">RUN_AS_USER</span>=<span class="string">"root"</span></span><br></pre></td></tr></table></figure></p><h3 id="2-2-nexus-新建第三方仓库"><a href="#2-2-nexus-新建第三方仓库" class="headerlink" title="2.2 nexus 新建第三方仓库"></a>2.2 nexus 新建第三方仓库</h3><p>配置 -&gt; Repositories -&gt; Create Repository -&gt; maven(hosted) -&gt; thirdparty(name) -&gt; Mixed(version policy), Allow redeploy(Deployment policy) -&gt; Create repository</p><blockquote><h2 id="3-nexus-批量导入本地包"><a href="#3-nexus-批量导入本地包" class="headerlink" title="3    nexus 批量导入本地包"></a>3    nexus 批量导入本地包</h2></blockquote><p>新建本地临时repo目录，转入需要导入的maven包</p><p>编辑导入包执行的脚本<br>vi mavenimport.sh</p><figure class="highlight bash"><figcaption><span>mavenimport.sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># copy and run this script to the root of the repository directory containing files</span></span><br><span class="line"><span class="comment"># this script attempts to exclude uploading itself explicitly so the script name is important</span></span><br><span class="line"><span class="comment"># Get command line params</span></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">":r:u:p:"</span> opt; <span class="keyword">do</span></span><br><span class="line"><span class="keyword">case</span> <span class="variable">$opt</span> <span class="keyword">in</span></span><br><span class="line">r) REPO_URL=<span class="string">"<span class="variable">$OPTARG</span>"</span></span><br><span class="line">;;</span><br><span class="line">u) USERNAME=<span class="string">"<span class="variable">$OPTARG</span>"</span></span><br><span class="line">;;</span><br><span class="line">p) PASSWORD=<span class="string">"<span class="variable">$OPTARG</span>"</span></span><br><span class="line">;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"> </span><br><span class="line">find . -<span class="built_in">type</span> f -not -path <span class="string">'./mavenimport\.sh*'</span> -not -path <span class="string">'*/\.*'</span> -not -path <span class="string">'*/\^archetype\-catalog\.xml*'</span> -not -path <span class="string">'*/\^maven\-metadata\-local*\.xml'</span> -not -path <span class="string">'*/\^maven\-metadata\-deployment*\.xml'</span> | sed <span class="string">"s|^\./||"</span> | xargs -I <span class="string">'&#123;&#125;'</span> curl -u <span class="string">"<span class="variable">$USERNAME</span>:<span class="variable">$PASSWORD</span>"</span> -X PUT -v -T &#123;&#125; <span class="variable">$&#123;REPO_URL&#125;</span>/&#123;&#125; ;</span><br></pre></td></tr></table></figure><p>赋权限<br><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">chmod</span> +x maven<span class="keyword">import</span>.sh</span><br></pre></td></tr></table></figure></p><p>执行上传命令<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mavenimport -u admin -<span class="selector-tag">p</span> admin123 -r http:<span class="comment">//192.168.1.82:8081/repository/thirdparty</span></span><br></pre></td></tr></table></figure></p><p>可能的操作，修改端口<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat <span class="regexp">/opt/</span>nexus<span class="regexp">/sonatype-work/</span>nexus3<span class="regexp">/etc/</span>nexus.properties</span><br></pre></td></tr></table></figure></p><blockquote><h2 id="4-nexus设置开机自启"><a href="#4-nexus设置开机自启" class="headerlink" title="4    nexus设置开机自启"></a>4    nexus设置开机自启</h2></blockquote><p>创建软连接<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/opt/</span>nexus<span class="regexp">/nexus-3.16.1-02/</span>bin<span class="regexp">/nexus /</span>etc<span class="regexp">/init.d/</span>nexus</span><br></pre></td></tr></table></figure></p><p>添加服务到开机自启<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chkconfig --<span class="keyword">add</span><span class="bash"> nexus</span></span><br><span class="line"><span class="bash">chkconfig --levels 345 nexus on</span></span><br></pre></td></tr></table></figure></p><p>启动、停止、重新启动<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service nexus start|<span class="type">stop</span>|<span class="type">restart</span></span><br></pre></td></tr></table></figure></p><blockquote><h2 id="5-遇到问题"><a href="#5-遇到问题" class="headerlink" title="5    遇到问题"></a>5    遇到问题</h2></blockquote><p>Q1    本地Maven更新包失败，异常Failed to read artifact descriptor ….<br>resolution will not be reattempted until the update interval of MyRepo has elapsed or updates are forced</p><p>1）删除下载失败的包，如，后缀为lastUpdated<br>2）IDE为myexlipse，右击项目 -&gt; Update Maven Dependencies -&gt; 勾选 Force Update of Snapshorts/Releases，强制更新依赖</p><blockquote><h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2></blockquote><p><em><a href="https://blog.csdn.net/u014468095/article/details/87261817" target="_blank" rel="noopener">Nexus3.x批量导入本地库</a></em><br><em><a href="https://devopscube.com/how-to-install-latest-sonatype-nexus-3-on-linux/" target="_blank" rel="noopener">How To Install Latest Sonatype Nexus 3 On Linux</a></em></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文包括：&lt;br&gt;nexus 3.16 安装、配置，批量导入本地maven包及开机自启设置。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://willwang.top/categories/Linux/"/>
+    
+      <category term="java环境配置" scheme="https://willwang.top/categories/Linux/java%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    
+    
+      <category term="nexus" scheme="https://willwang.top/tags/nexus/"/>
+    
+  </entry>
   
   <entry>
     <title>Data Analysis basics p2:Graphing/visualization</title>
@@ -162,36 +186,6 @@
   </entry>
   
   <entry>
-    <title>Deep Learning basics p3: Convolutional Neural Networks</title>
-    <link href="https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/"/>
-    <id>https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/</id>
-    <published>2019-03-29T16:00:00.000Z</published>
-    <updated>2019-03-30T08:54:30.286Z</updated>
-    
-    <content type="html"><![CDATA[<p>本文主要包括：</p><ul><li>加载自定义数据</li><li>构建顺序模型，并对模型进行堆叠</li><li>配置学习过程</li><li>训练数据</li></ul><a id="more"></a><blockquote><h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.models</span> import Sequential</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Conv2D, MaxPooling2D</span><br><span class="line"></span><br><span class="line">import pickle</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="1-加载数据。"><a href="#1-加载数据。" class="headerlink" title="1 加载数据。"></a>1 加载数据。</h5></blockquote><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># X为输入数据</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># Y为标签</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"Y.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">Y</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"><span class="comment"># print(Y)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="2-构建模型。"><a href="#2-构建模型。" class="headerlink" title="2 构建模型。"></a>2 构建模型。</h5></blockquote><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 堆叠模型。</span></span><br><span class="line"><span class="meta"># 2D卷积层 256表示输出空间的维度 ；(3, 3)表示2D卷积窗口的宽度和高度，单个数时，表示维度值相同；</span></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape = X.shape[<span class="number">1</span>:]))</span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"><span class="meta"># MaxPooling2D,对空间数据的最大池化</span></span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line"><span class="meta"># 设置激活函数</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 调整为1D的特征向量</span></span><br><span class="line">model.<span class="keyword">add</span>(Flatten())</span><br><span class="line"><span class="meta"># 全连接层，设置输出空间维度，即输出数据的尺寸为（*， 64）</span></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">64</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line"><span class="meta"># 设置激活函数sigmoid</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="3-配置学习过程。"><a href="#3-配置学习过程。" class="headerlink" title="3 配置学习过程。"></a>3 配置学习过程。</h5></blockquote><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta"># 主要 配置优化器optimizer，损失函数loss及评估标准metrics</span></span><br><span class="line">model.compile(loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">             optimizer=<span class="string">'adam'</span>,</span><br><span class="line">             metrics = [<span class="string">'accuracy'</span>])</span><br><span class="line">             </span><br></pre></td></tr></table></figure><blockquote><h5 id="4-训练模型。"><a href="#4-训练模型。" class="headerlink" title="4 训练模型。"></a>4 训练模型。</h5></blockquote><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 对样本X, Y进行迭代，批处理样本数<span class="number">32</span>；迭代次数<span class="number">3</span>；作为验证集比例为<span class="number">0.3</span></span><br><span class="line">model.fit(X, Y, batch_size = <span class="number">32</span>, epochs = <span class="number">1</span>, validation_split = <span class="number">0.3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p><em>原文：<a href="https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Convolutional Neural Networks</a></em></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;本文主要包括：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;加载自定义数据&lt;/li&gt;
-&lt;li&gt;构建顺序模型，并对模型进行堆叠&lt;/li&gt;
-&lt;li&gt;配置学习过程&lt;/li&gt;
-&lt;li&gt;训练数据&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-      <category term="AI" scheme="https://willwang.top/categories/AI/"/>
-    
-      <category term="DL basic" scheme="https://willwang.top/categories/AI/DL-basic/"/>
-    
-    
-      <category term="DL basic" scheme="https://willwang.top/tags/DL-basic/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Deep Learning basics p4: Analyzing Models with TensorBoard</title>
     <link href="https://willwang.top/published/2019/03/30/Deep-Learning-basics-p4-Analyzing-Models-with-TensorBoard/"/>
     <id>https://willwang.top/published/2019/03/30/Deep-Learning-basics-p4-Analyzing-Models-with-TensorBoard/</id>
@@ -209,6 +203,36 @@
 &lt;li&gt;配置学习过程&lt;/li&gt;
 &lt;li&gt;训练数据&lt;/li&gt;
 &lt;li&gt;通过调用回调函数，查看训练过程的状态&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="AI" scheme="https://willwang.top/categories/AI/"/>
+    
+      <category term="DL basic" scheme="https://willwang.top/categories/AI/DL-basic/"/>
+    
+    
+      <category term="DL basic" scheme="https://willwang.top/tags/DL-basic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Deep Learning basics p3: Convolutional Neural Networks</title>
+    <link href="https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/"/>
+    <id>https://willwang.top/published/2019/03/30/Deep-Learning-basics-p3-Convolutional-Neural-Networks/</id>
+    <published>2019-03-29T16:00:00.000Z</published>
+    <updated>2019-03-30T08:54:30.286Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文主要包括：</p><ul><li>加载自定义数据</li><li>构建顺序模型，并对模型进行堆叠</li><li>配置学习过程</li><li>训练数据</li></ul><a id="more"></a><blockquote><h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.models</span> import Sequential</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Conv2D, MaxPooling2D</span><br><span class="line"></span><br><span class="line">import pickle</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="1-加载数据。"><a href="#1-加载数据。" class="headerlink" title="1 加载数据。"></a>1 加载数据。</h5></blockquote><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># X为输入数据</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># Y为标签</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"Y.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">Y</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"><span class="comment"># print(Y)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="2-构建模型。"><a href="#2-构建模型。" class="headerlink" title="2 构建模型。"></a>2 构建模型。</h5></blockquote><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 堆叠模型。</span></span><br><span class="line"><span class="meta"># 2D卷积层 256表示输出空间的维度 ；(3, 3)表示2D卷积窗口的宽度和高度，单个数时，表示维度值相同；</span></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape = X.shape[<span class="number">1</span>:]))</span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"><span class="meta"># MaxPooling2D,对空间数据的最大池化</span></span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line"><span class="meta"># 设置激活函数</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 调整为1D的特征向量</span></span><br><span class="line">model.<span class="keyword">add</span>(Flatten())</span><br><span class="line"><span class="meta"># 全连接层，设置输出空间维度，即输出数据的尺寸为（*， 64）</span></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">64</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line"><span class="meta"># 设置激活函数sigmoid</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure><blockquote><h5 id="3-配置学习过程。"><a href="#3-配置学习过程。" class="headerlink" title="3 配置学习过程。"></a>3 配置学习过程。</h5></blockquote><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta"># 主要 配置优化器optimizer，损失函数loss及评估标准metrics</span></span><br><span class="line">model.compile(loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">             optimizer=<span class="string">'adam'</span>,</span><br><span class="line">             metrics = [<span class="string">'accuracy'</span>])</span><br><span class="line">             </span><br></pre></td></tr></table></figure><blockquote><h5 id="4-训练模型。"><a href="#4-训练模型。" class="headerlink" title="4 训练模型。"></a>4 训练模型。</h5></blockquote><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 对样本X, Y进行迭代，批处理样本数<span class="number">32</span>；迭代次数<span class="number">3</span>；作为验证集比例为<span class="number">0.3</span></span><br><span class="line">model.fit(X, Y, batch_size = <span class="number">32</span>, epochs = <span class="number">1</span>, validation_split = <span class="number">0.3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p><em>原文：<a href="https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Convolutional Neural Networks</a></em></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文主要包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加载自定义数据&lt;/li&gt;
+&lt;li&gt;构建顺序模型，并对模型进行堆叠&lt;/li&gt;
+&lt;li&gt;配置学习过程&lt;/li&gt;
+&lt;li&gt;训练数据&lt;/li&gt;
 &lt;/ul&gt;
     
     </summary>
@@ -324,6 +348,30 @@
   </entry>
   
   <entry>
+    <title>Welcome to my blog</title>
+    <link href="https://willwang.top/published/2019/03/10/welcome/"/>
+    <id>https://willwang.top/published/2019/03/10/welcome/</id>
+    <published>2019-03-09T16:00:00.000Z</published>
+    <updated>2019-03-10T04:39:26.443Z</updated>
+    
+    <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;欢迎访问我的博客，希望留下你美丽的足记。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="欢迎" scheme="https://willwang.top/tags/%E6%AC%A2%E8%BF%8E/"/>
+    
+  </entry>
+  
+  <entry>
     <title>CentOS6.5下搭建mongodb主、从、仲裁节点副本集实践</title>
     <link href="https://willwang.top/published/2019/03/10/CentOS6-5%E4%B8%8B%E6%90%AD%E5%BB%BAmongodb%E4%B8%BB%E3%80%81%E4%BB%8E%E3%80%81%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9%E5%89%AF%E6%9C%AC%E9%9B%86%E5%AE%9E%E8%B7%B5/"/>
     <id>https://willwang.top/published/2019/03/10/CentOS6-5下搭建mongodb主、从、仲裁节点副本集实践/</id>
@@ -349,30 +397,6 @@
     
     
       <category term="mongodb" scheme="https://willwang.top/tags/mongodb/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Welcome to my blog</title>
-    <link href="https://willwang.top/published/2019/03/10/welcome/"/>
-    <id>https://willwang.top/published/2019/03/10/welcome/</id>
-    <published>2019-03-09T16:00:00.000Z</published>
-    <updated>2019-03-10T04:39:26.443Z</updated>
-    
-    <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;欢迎访问我的博客，希望留下你美丽的足记。&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-    
-      <category term="欢迎" scheme="https://willwang.top/tags/%E6%AC%A2%E8%BF%8E/"/>
     
   </entry>
   
