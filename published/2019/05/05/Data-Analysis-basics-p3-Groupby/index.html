@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>Deep Learning basics p3: Convolutional Neural Networks | Will&#39;s blog</title>
+  <title>Data Analysis basics p3:Groupby | Will&#39;s blog</title>
   
   
   <meta name="description" content="will go everywhere!">
@@ -210,7 +210,7 @@
   <div class="meta" id="header-meta">
     
       
-          <h1 class="title">Deep Learning basics p3: Convolutional Neural Networks</h1>
+          <h1 class="title">Data Analysis basics p3:Groupby</h1>
       
     
 
@@ -227,7 +227,7 @@
         <div class="new-meta-item date">
           <a class="notlink">
             <i class="fas fa-clock" aria-hidden="true"></i>
-            2019-03-30
+            2019-05-05
           </a>
         </div>
       
@@ -235,9 +235,9 @@
         
           
           <div class="new-meta-item category">
-            <a href="/categories/AI/DL-basic/">
+            <a href="/categories/AI/DA-basic/">
               <i class="fas fa-folder-open" aria-hidden="true"></i>
-              AI&nbsp;/&nbsp;DL basic
+              AI&nbsp;/&nbsp;DA basic
             </a>
           </div>
         
@@ -262,30 +262,17 @@
 
     <section class="article typo">
       <div class="article-entry" itemprop="articleBody">
-        <p>本文主要包括：</p>
-<ul>
-<li>加载自定义数据</li>
-<li>构建顺序模型，并对模型进行堆叠</li>
-<li>配置学习过程</li>
-<li>训练数据</li>
-</ul>
+        <p>本文主要对数据集进行分组操作。</p>
 <a id="more"></a>
 <blockquote>
-<h5 id="0-导入依赖包"><a href="#0-导入依赖包" class="headerlink" title="0 导入依赖包"></a>0 导入依赖包</h5></blockquote>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.models</span> import Sequential</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Dense, Dropout, Activation, Flatten</span><br><span class="line">from tensorflow<span class="selector-class">.keras</span><span class="selector-class">.layers</span> import Conv2D, MaxPooling2D</span><br><span class="line"></span><br><span class="line">import pickle</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="0-读取数据集"><a href="#0-读取数据集" class="headerlink" title="0 读取数据集"></a>0 读取数据集</h5></blockquote>
+<p>下载数据集<br>官方：<a href="https://www.kaggle.com/lislejoem/us-minimum-wage-by-state-from-1968-to-2017" target="_blank" rel="noopener">us minimum wage by state</a><br>本地：<a href="/downloads/datasets/us-minimum-wage-by-state-from-1968-to-2017.zip">us minimum wage by state</a></p>
 <blockquote>
-<h5 id="1-加载数据。"><a href="#1-加载数据。" class="headerlink" title="1 加载数据。"></a>1 加载数据。</h5></blockquote>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># X为输入数据</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"X.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">X</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="comment"># Y为标签</span></span><br><span class="line"><span class="attr">pickle_in</span> = open(<span class="string">"Y.pickle"</span>, <span class="string">"rb"</span>)</span><br><span class="line"><span class="attr">Y</span> = pickle.load(pickle_in)</span><br><span class="line"><span class="attr">X</span> = X/<span class="number">255.0</span></span><br><span class="line"><span class="comment"># print(Y)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="1-操作数据集"><a href="#1-操作数据集" class="headerlink" title="1 操作数据集"></a>1 操作数据集</h5></blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">import pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="meta"># 加载数据</span></span><br><span class="line">df = pd.read_csv(<span class="string">"datasets/Minimum Wage Data.csv"</span>, encoding=<span class="string">"latin"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"># 保存数据</span></span><br><span class="line">df.to_csv(<span class="string">"datasets/minwage.csv"</span>, encoding=<span class="string">"utf-8"</span>)</span><br><span class="line">df = pd.read_csv(<span class="string">"datasets/minwage.csv"</span>)</span><br><span class="line">df.head()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"># 按州分组查看数据</span></span><br><span class="line">gb = df.groupby(<span class="string">"State"</span>)</span><br><span class="line">gb.get_group(<span class="string">"Alabama"</span>).set_index(<span class="string">"Year"</span>).head()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">act_min_wage = pd.DataFrame()</span><br><span class="line"><span class="meta"># 按照州进行迭代</span></span><br><span class="line"><span class="keyword">for</span> name, <span class="keyword">group</span> <span class="keyword">in</span> df.groupby(<span class="string">"State"</span>):</span><br><span class="line">    <span class="keyword">if</span> act_min_wage.empty:</span><br><span class="line">        act_min_wage = <span class="keyword">group</span>.set_index(<span class="string">"Year"</span>)[[<span class="string">"Low.2018"</span>]].rename(columns=&#123;<span class="string">"Low.2018"</span>: name&#125;)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        act_min_wage = act_min_wage.<span class="keyword">join</span>(<span class="keyword">group</span>.set_index(<span class="string">"Year"</span>)[[<span class="string">"Low.2018"</span>]].rename(columns=&#123;<span class="string">"Low.2018"</span>: name&#125;))</span><br><span class="line"></span><br><span class="line">act_min_wage.head()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"># 查看汇总信息</span></span><br><span class="line">act_min_wage.describe()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"># 返回相关系数</span></span><br><span class="line">act_min_wage.corr().head()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">df.head()</span><br><span class="line"><span class="meta"># 显示全0列</span></span><br><span class="line">issue_df = df[df[<span class="string">'Low.2018'</span>]==<span class="number">0</span>]</span><br><span class="line">issue_df.head()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"># 去重,unique()相当于把list变为set</span></span><br><span class="line">issue_df[<span class="string">'State'</span>].unique()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="meta"># 替换，并删除包含空值的列</span></span><br><span class="line">act_min_wage.replace(<span class="number">0</span>, np.NaN).dropna(axis=<span class="number">1</span>).corr().head</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta"># 剔除有问题的州，为0的</span></span><br><span class="line">min_wage_corr = act_min_wage.replace(<span class="number">0</span>, np.NaN).dropna(axis=<span class="number">1</span>).corr()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> problem <span class="keyword">in</span> issue_df[<span class="string">'State'</span>].unique():</span><br><span class="line">    <span class="keyword">if</span> problem <span class="keyword">in</span> min_wage_corr.columns:</span><br><span class="line">        print(<span class="string">"Missing something here..."</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">grouped_issues = issue_df.groupby(<span class="string">"State"</span>)</span><br><span class="line">grouped_issues.get_group(<span class="string">"Alabama"</span>).head(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> state, data <span class="keyword">in</span> grouped_issues:</span><br><span class="line">    <span class="keyword">if</span> data[<span class="string">'Low.2018'</span>].sum() != <span class="number">0.0</span>:</span><br><span class="line">        print(<span class="string">"Some data found for"</span>, state)</span><br><span class="line">		</span><br></pre></td></tr></table></figure>
 <blockquote>
-<h5 id="2-构建模型。"><a href="#2-构建模型。" class="headerlink" title="2 构建模型。"></a>2 构建模型。</h5></blockquote>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line"><span class="meta"># 堆叠模型。</span></span><br><span class="line"><span class="meta"># 2D卷积层 256表示输出空间的维度 ；(3, 3)表示2D卷积窗口的宽度和高度，单个数时，表示维度值相同；</span></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape = X.shape[<span class="number">1</span>:]))</span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line"><span class="meta"># MaxPooling2D,对空间数据的最大池化</span></span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Conv2D(<span class="number">256</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line"><span class="meta"># 设置激活函数</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'relu'</span>))</span><br><span class="line">model.<span class="keyword">add</span>(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 调整为1D的特征向量</span></span><br><span class="line">model.<span class="keyword">add</span>(Flatten())</span><br><span class="line"><span class="meta"># 全连接层，设置输出空间维度，即输出数据的尺寸为（*， 64）</span></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">64</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="keyword">add</span>(Dense(<span class="number">1</span>))</span><br><span class="line"><span class="meta"># 设置激活函数sigmoid</span></span><br><span class="line">model.<span class="keyword">add</span>(Activation(<span class="string">'sigmoid'</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<h5 id="3-配置学习过程。"><a href="#3-配置学习过程。" class="headerlink" title="3 配置学习过程。"></a>3 配置学习过程。</h5></blockquote>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta"># 主要 配置优化器optimizer，损失函数loss及评估标准metrics</span></span><br><span class="line">model.compile(loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">             optimizer=<span class="string">'adam'</span>,</span><br><span class="line">             metrics = [<span class="string">'accuracy'</span>])</span><br><span class="line">             </span><br></pre></td></tr></table></figure>
-<blockquote>
-<h5 id="4-训练模型。"><a href="#4-训练模型。" class="headerlink" title="4 训练模型。"></a>4 训练模型。</h5></blockquote>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 对样本X, Y进行迭代，批处理样本数<span class="number">32</span>；迭代次数<span class="number">3</span>；作为验证集比例为<span class="number">0.3</span></span><br><span class="line">model.fit(X, Y, batch_size = <span class="number">32</span>, epochs = <span class="number">1</span>, validation_split = <span class="number">0.3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><em>原文：<a href="https://pythonprogramming.net/convolutional-neural-network-deep-learning-python-tensorflow-keras/" target="_blank" rel="noopener">Convolutional Neural Networks</a></em></p>
+<h5 id="3-Ref"><a href="#3-Ref" class="headerlink" title="3 Ref"></a>3 Ref</h5></blockquote>
+<p><em><a href="https://pythonprogramming.net/groupby-python3-pandas-data-analysis/" target="_blank" rel="noopener">Groupby</a></em></p>
 
       </div>
         
@@ -293,16 +280,16 @@
             <hr>
             <div class="new-meta-box">
               
-                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-03-30T16:54:30+08:00">
+                <div class="new-meta-item date" itemprop="dateUpdated" datetime="2019-05-05T00:10:53+08:00">
                   <a class="notlink">
                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                    2019-03-30
+                    2019-05-05
                   </a>
                 </div>
               
               
                 
-                <div class="new-meta-item meta-tags"><a class="tag" href="/tags/DL-basic/"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;DL basic</a></div>
+                <div class="new-meta-item meta-tags"><a class="tag" href="/tags/DA-basic/"><i class="fas fa-hashtag" aria-hidden="true"></i>&nbsp;DA basic</a></div>
               
               
             </div>
@@ -312,30 +299,14 @@
         
             <div class="prev-next">
                 
-                    <section class="prev">
-                        <span class="art-item-left">
-                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
-                            <h4>
-                                <a href="/published/2019/03/30/Deep-Learning-basics-p4-Analyzing-Models-with-TensorBoard/" rel="prev" title="Deep Learning basics p4: Analyzing Models with TensorBoard">
-                                  
-                                      Deep Learning basics p4: Analyzing Models with TensorBoard
-                                  
-                                </a>
-                            </h4>
-                            
-                                
-                            
-                        </span>
-                    </section>
-                
                 
                     <section class="next">
                         <span class="art-item-right" aria-hidden="true">
                             <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
                             <h4>
-                                <a href="/published/2019/03/24/Deep-Learning-basics-p2-loading-custom-data/" rel="prev" title="Deep Learning basics p2:loading custom data">
+                                <a href="/published/2019/05/04/五一华山看日出/" rel="prev" title="五一华山看日出">
                                     
-                                        Deep Learning basics p2:loading custom data
+                                        五一华山看日出
                                     
                                 </a>
                             </h4>
@@ -380,7 +351,7 @@
 
 <script>
     window.subData = {
-        title: 'Deep Learning basics p3: Convolutional Neural Networks',
+        title: 'Data Analysis basics p3:Groupby',
         tools: true
     }
 </script>
@@ -458,7 +429,7 @@
 </header>
 
     <div class="content material">
-      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#0-导入依赖包"><span class="toc-text">0 导入依赖包</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-加载数据。"><span class="toc-text">1 加载数据。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-构建模型。"><span class="toc-text">2 构建模型。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-配置学习过程。"><span class="toc-text">3 配置学习过程。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-训练模型。"><span class="toc-text">4 训练模型。</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#0-读取数据集"><span class="toc-text">0 读取数据集</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-操作数据集"><span class="toc-text">1 操作数据集</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-Ref"><span class="toc-text">3 Ref</span></a></li></ol>
     </div>
   </section>
 
