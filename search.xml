@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>2019年6月合租房照片</title>
+      <link href="/published/2019/06/19/2019%E5%B9%B46%E6%9C%88%E5%90%88%E7%A7%9F%E6%88%BF%E7%85%A7%E7%89%87/"/>
+      <url>/published/2019/06/19/2019%E5%B9%B46%E6%9C%88%E5%90%88%E7%A7%9F%E6%88%BF%E7%85%A7%E7%89%87/</url>
+      
+        <content type="html"><![CDATA[<p>由于58同城信息太杂，不方便，豆瓣上传慢，将合租房照片放在这里，方便查看。</p><a id="more"></a><blockquote><h2 id="发布几张合租房照片"><a href="#发布几张合租房照片" class="headerlink" title="发布几张合租房照片"></a>发布几张合租房照片</h2></blockquote><ul><li>客厅。</li></ul><p><img src="/img/2019/06/IMG_20190618_235114.jpg" alt=""></p><ul><li>餐厅。</li></ul><p><img src="/img/2019/06/IMG_20190618_235137.jpg" alt=""></p><ul><li>厨房。</li></ul><p><img src="/img/2019/06/IMG_20190618_235137.jpg" alt=""></p><ul><li>另一卧室。</li></ul><p><img src="/img/2019/06/IMG_20190618_235337.jpg" alt=""></p><ul><li>洗漱间。</li></ul><p><img src="/img/2019/06/IMG_20190618_235556.jpg" alt=""></p><ul><li>卫生间。</li></ul><p><img src="/img/2019/06/IMG_20190618_235700.jpg" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 生活 </category>
+          
+          <category> 租房照片 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 租房照片 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Data Analysis basics p3:Groupby</title>
       <link href="/published/2019/05/05/Data-Analysis-basics-p3-Groupby/"/>
       <url>/published/2019/05/05/Data-Analysis-basics-p3-Groupby/</url>
@@ -382,6 +409,25 @@
     
     
     <entry>
+      <title>Welcome to my blog</title>
+      <link href="/published/2019/03/10/welcome/"/>
+      <url>/published/2019/03/10/welcome/</url>
+      
+        <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 欢迎 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CentOS6.5下搭建mongodb主、从、仲裁节点副本集实践</title>
       <link href="/published/2019/03/10/CentOS6-5%E4%B8%8B%E6%90%AD%E5%BB%BAmongodb%E4%B8%BB%E3%80%81%E4%BB%8E%E3%80%81%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9%E5%89%AF%E6%9C%AC%E9%9B%86%E5%AE%9E%E8%B7%B5/"/>
       <url>/published/2019/03/10/CentOS6-5%E4%B8%8B%E6%90%AD%E5%BB%BAmongodb%E4%B8%BB%E3%80%81%E4%BB%8E%E3%80%81%E4%BB%B2%E8%A3%81%E8%8A%82%E7%82%B9%E5%89%AF%E6%9C%AC%E9%9B%86%E5%AE%9E%E8%B7%B5/</url>
@@ -401,25 +447,6 @@
         <tags>
             
             <tag> mongodb </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Welcome to my blog</title>
-      <link href="/published/2019/03/10/welcome/"/>
-      <url>/published/2019/03/10/welcome/</url>
-      
-        <content type="html"><![CDATA[<p>欢迎访问我的博客，希望留下你美丽的足记。</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 欢迎 </tag>
             
         </tags>
       
